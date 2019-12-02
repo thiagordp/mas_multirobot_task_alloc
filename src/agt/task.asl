@@ -12,9 +12,14 @@ destiny(math.round(math.random * 100), math.round(math.random * 100)).
 		makeArtifact(Id, "grid_env.TaskArtifact", [], ArtId);
 		.print("Artefato criado por: ", Id);
 		Id::focus(ArtId);
-		Id::start(Id, math.round(math.random*100), math.round(math.random*100)).
-		
-		
+		Id::start(Id, math.round(math.random*100), math.round(math.random*100));
+		.print("Broadcasting...");
+		.broadcast(achieve, focus_message_task(Id)) ;
+		.at("now + 5 seconds", {+!decide(Id)}).
+
++!decide(Id) <- 
+	.print("Deliberando ", Id);
+	Id::stop.
 
 
 { include("$jacamoJar/templates/common-cartago.asl") }

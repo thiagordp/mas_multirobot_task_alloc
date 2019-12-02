@@ -5,6 +5,8 @@ package grid_env;
 
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 import cartago.AgentId;
 import cartago.Artifact;
 import cartago.OPERATION;
@@ -37,10 +39,13 @@ public class TaskArtifact extends Artifact {
 		defineObsProperty("id_task", idTask);
 		defineObsProperty("position_x", x);
 		defineObsProperty("position_y", y);
+		// Criar propriedade que conta quantos fizeram bid.
+		getObsProperty("status_task").updateValue("running");
 	}
 
 	@OPERATION
 	public void stop() {
+		JOptionPane.showMessageDialog(null, "Aqui");
 		// Apenas a tarefa que criou pode fazer a operação
 		if (!getCreatorId().equals(getCurrentOpAgentId()))
 			failed("You are not allowed to do it");
@@ -50,24 +55,27 @@ public class TaskArtifact extends Artifact {
 		int minDist = Integer.MAX_VALUE;
 		Bid minBid = null;
 
-		for (Bid bid : activeList) {
-			int xR = bid.x;
-			int yR = bid.y;
+		if (activeList.size() > 0) {
 
-			int xT = getObsProperty("position_x").intValue();
-			int yT = getObsProperty("position_y").intValue();
+			for (Bid bid : activeList) {
+				int xR = bid.x;
+				int yR = bid.y;
 
-			int dManhattam = Math.abs(xR - xT) + Math.abs(yR - yT);
+				int xT = getObsProperty("position_x").intValue();
+				int yT = getObsProperty("position_y").intValue();
 
-			if (dManhattam < minDist) {
-				minDist = dManhattam;
-				minBid = bid;
+				int dManhattam = Math.abs(xR - xT) + Math.abs(yR - yT);
+
+				if (dManhattam < minDist) {
+					minDist = dManhattam;
+					minBid = bid;
+				}
 			}
+			
+			currentWinner = minBid.agentId.toString();
+			getObsProperty("status_task").updateValue("finish");
+			getObsProperty("winner").updateValue(new Atom(currentWinner));
 		}
-
-		currentWinner = minBid.agentId.toString();
-		getObsProperty("status_task").updateValue("finish");
-		getObsProperty("winner").updateValue(new Atom(currentWinner));
 	}
 
 	@OPERATION
