@@ -16,6 +16,7 @@ mas mas_multirobot_task_alloc {
 
     agent robot : robot.asl {
     	instances : 2
+    	//teste
     }
     
     agent task : task.asl{
