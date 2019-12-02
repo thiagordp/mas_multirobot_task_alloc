@@ -1,4 +1,4 @@
-// Agent sample_agent in project mas_multirobot_task_alloc
+// Agent robot in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
 
@@ -7,6 +7,7 @@
 !start.
 
 /* Plans */
+
 
 +!start : true <- .print("hello world.").
 

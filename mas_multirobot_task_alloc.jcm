@@ -9,14 +9,21 @@
     (see jacamo/doc/jcm.html for more information about what can be defined in this file)
 
     JaCaMo <VERSION>
-    <DATE>
+    December 2nd, 2019
 */
 
 mas mas_multirobot_task_alloc {
 
-    agent sample_agent
-
+    agent robot : robot.asl {
+    	instances : 2
+    }
     
-
+    agent task : task.asl{
+    	instances: 5
+    }
+    
+    workspace grid {
+    	agents: robot, task
+    }
 }
 
