@@ -39,7 +39,7 @@ public class TaskArtifact extends Artifact {
 		defineObsProperty("id_task", idTask);
 		defineObsProperty("position_x", x);
 		defineObsProperty("position_y", y);
-		// Criar propriedade que conta quantos fizeram bid.
+		defineObsProperty("bid_count", 0); //TODO: Criar propriedade que conta quantos fizeram bid.
 		getObsProperty("status_task").updateValue("running");
 	}
 
@@ -71,7 +71,7 @@ public class TaskArtifact extends Artifact {
 					minBid = bid;
 				}
 			}
-			
+
 			currentWinner = minBid.agentId.toString();
 			getObsProperty("status_task").updateValue("finish");
 			getObsProperty("winner").updateValue(new Atom(currentWinner));
