@@ -39,7 +39,7 @@ public class TaskArtifact extends Artifact {
 		defineObsProperty("id_task", idTask);
 		defineObsProperty("position_x", x);
 		defineObsProperty("position_y", y);
-		defineObsProperty("bid_count", 0); //TODO: Criar propriedade que conta quantos fizeram bid.
+		defineObsProperty("bid_count", 0); // TODO: Criar propriedade que conta quantos fizeram bid.
 		getObsProperty("status_task").updateValue("running");
 	}
 
@@ -55,27 +55,25 @@ public class TaskArtifact extends Artifact {
 		int minDist = Integer.MAX_VALUE;
 		Bid minBid = null;
 
-		if (activeList.size() > 0) {
+		for (Bid bid : activeList) {
+			int xR = bid.x;
+			int yR = bid.y;
 
-			for (Bid bid : activeList) {
-				int xR = bid.x;
-				int yR = bid.y;
+			int xT = getObsProperty("position_x").intValue();
+			int yT = getObsProperty("position_y").intValue();
 
-				int xT = getObsProperty("position_x").intValue();
-				int yT = getObsProperty("position_y").intValue();
+			int dManhattam = Math.abs(xR - xT) + Math.abs(yR - yT);
 
-				int dManhattam = Math.abs(xR - xT) + Math.abs(yR - yT);
-
-				if (dManhattam < minDist) {
-					minDist = dManhattam;
-					minBid = bid;
-				}
+			if (dManhattam < minDist) {
+				minDist = dManhattam;
+				minBid = bid;
 			}
-
-			currentWinner = minBid.agentId.toString();
-			getObsProperty("status_task").updateValue("finish");
-			getObsProperty("winner").updateValue(new Atom(currentWinner));
 		}
+
+		currentWinner = minBid.agentId.toString();
+		getObsProperty("status_task").updateValue("finish");
+		getObsProperty("winner").updateValue(new Atom(currentWinner));
+
 	}
 
 	@OPERATION
@@ -95,5 +93,7 @@ public class TaskArtifact extends Artifact {
 			Bid bid = new Bid(agentId, x, y);
 			activeList.add(bid);
 		}
+
+		getObsProperty("bid_count").updateValue(activeList.size());
 	}
 }

@@ -17,9 +17,18 @@ destiny(math.round(math.random * 100), math.round(math.random * 100)).
 		.broadcast(achieve, focus_message_task(Id)) ;
 		.at("now + 5 seconds", {+!decide(Id)}).
 
-+!decide(Id) <- 
++!decide(Id) : 
+	Id::bid_count(C) &
+	C > 0
+	<- 
 	.print("Deliberando ", Id);
 	Id::stop.
+
++!decide(Id)
+	<- 
+	.print("Broadcasting", Id);
+	.broadcast(achieve, focus_message_task(Id));
+	.at("now + 5 seconds", {+!decide(Id)}).
 
 
 { include("$jacamoJar/templates/common-cartago.asl") }
