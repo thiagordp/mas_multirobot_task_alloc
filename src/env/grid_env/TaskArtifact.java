@@ -39,18 +39,19 @@ public class TaskArtifact extends Artifact {
 		defineObsProperty("id_task", idTask);
 		defineObsProperty("position_x", x);
 		defineObsProperty("position_y", y);
-		defineObsProperty("bid_count", 0); // TODO: Criar propriedade que conta quantos fizeram bid.
+		defineObsProperty("bid_count", 0);
 		getObsProperty("status_task").updateValue("running");
 	}
 
 	@OPERATION
 	public void stop() {
-		JOptionPane.showMessageDialog(null, "Aqui");
 		// Apenas a tarefa que criou pode fazer a operação
 		if (!getCreatorId().equals(getCurrentOpAgentId()))
 			failed("You are not allowed to do it");
 		if (!getObsProperty("status_task").stringValue().equals("running"))
 			failed("Task not running");
+
+		getObsProperty("status_task").updateValue("finish");
 
 		int minDist = Integer.MAX_VALUE;
 		Bid minBid = null;
@@ -70,10 +71,10 @@ public class TaskArtifact extends Artifact {
 			}
 		}
 
+		//JOptionPane.showMessageDialog(null, minBid.agentId.toString());
 		currentWinner = minBid.agentId.toString();
-		getObsProperty("status_task").updateValue("finish");
 		getObsProperty("winner").updateValue(new Atom(currentWinner));
-
+		activeList.clear();
 	}
 
 	@OPERATION

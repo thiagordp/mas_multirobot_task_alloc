@@ -10,10 +10,10 @@ destiny(math.round(math.random * 100), math.round(math.random * 100)).
 +!start
 	<- 	.my_name(Id);
 		makeArtifact(Id, "grid_env.TaskArtifact", [], ArtId);
-		.print("Artefato criado por: ", Id);
+		.print("Artefato criado por: ", Id, " com id ", ArtId);
 		Id::focus(ArtId);
 		Id::start(Id, math.round(math.random*100), math.round(math.random*100));
-		.print("Broadcasting...");
+		.print("Initial broadcasting...");
 		.broadcast(achieve, focus_message_task(Id)) ;
 		.at("now + 5 seconds", {+!decide(Id)}).
 
@@ -21,15 +21,32 @@ destiny(math.round(math.random * 100), math.round(math.random * 100)).
 	Id::bid_count(C) &
 	C > 0
 	<- 
-	.print("Deliberando ", Id);
+	.print("Deliberando ", Id, " C: ", C);
 	Id::stop.
 
 +!decide(Id)
+	: Id::bid_count(C) & C == 0 // TODO: É unificação ou comparação mesmo?
 	<- 
-	.print("Broadcasting", Id);
+	.print("Broadcasting ", Id);
 	.broadcast(achieve, focus_message_task(Id));
 	.at("now + 5 seconds", {+!decide(Id)}).
 
++!focus_message_task(A)  
+	<-  .wait(0).
+	
++hello(AId)[source(A)]
+	: AId::winner(N) &
+	  N == A &
+	  destiny(X, Y)
+	<- .print("I received the message from ", A);
+	   .send(A, tell, destiny(X, Y)).
+
++arrive(X, Y)[source(A)]
+	: destiny(X, Y)
+	<- .print("I arrived in my destiny by ", A);
+	   .my_name(N);
+	   .print(N);
+	   .kill_agent(N).
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
