@@ -14,18 +14,33 @@
 
 mas mas_multirobot_task_alloc {
 
-    agent robot : robot.asl {
-    	instances : 5
-    	beliefs: maxSize(10), neighborhood(2)
-    }
+    // agent robot : robot.asl {
+    	// instances : 5
+    	// beliefs: maxSize(10), neighborhood(2)
+    // }
     
-    agent task : task.asl{
-    	instances: 10
+    agent task1 : task.asl{
+    	focus: grid.t1view
     	beliefs: maxSize(10)
     }
     
-    workspace grid {
-    	agents: robot, task
+    agent task2 : task.asl{
+    	focus: grid.t2view
+    	beliefs: maxSize(10)
     }
+    
+    agent robot1: robot.asl{
+    	focus: grid.r1view
+    	beliefs: maxSize(10), neighborhood(3)
+    }
+    
+    workspace grid {
+    	artifact t1view: grid_env.TaskPlanet(0, 0)
+    	artifact t2view: grid_env.TaskPlanet(1, 0)
+
+    	artifact r1view: grid_env.TaskPlanet(2, 1)
+    }
+    
+    class-path: lib                      // java class path
 }
 

@@ -7,18 +7,23 @@
 //status("idle").
 
 /* Initial goals */
-!start.
+!set_initial_positions.
 
 /* Plans */
+
++!set_initial_positions
+	:	maxSize(M)
+	<- 	+pos(math.round(math.random * M), math.round(math.random * M));
+		!start.
 	
 +!start
-	: maxSize(M)
-	 <- +pos(math.round(math.random * M), math.round(math.random * M));
+	: pos(X, Y)
+	 <- setPosition(X, Y);
 	 	+status("idle"). 
 
 
 +status("idle")
-	<- .at("now + 1 seconds", {+!decideMove}).
+	<- .at("now + 2 seconds", {+!decideMove}).
 	
 +!decideMove
 	: status(S) &
@@ -52,6 +57,7 @@
 	<- 	.print("I am moving to (", X, ", ",  Y, ")");
 		-+status("moving");
 		-+pos(X, Y);
+		setPosition(X, Y);
 		-+status("idle").
 
 +!focus_message_task(AtName)  

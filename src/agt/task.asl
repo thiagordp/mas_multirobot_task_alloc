@@ -3,18 +3,25 @@
 /* Initial beliefs and rules */
 //destiny(math.round(math.random * 100), math.round(math.random * 100)).
 /* Initial goals */
-!start.
+!set_initial_positions.
 
 /* Plans */
 
++!set_initial_positions
+	: 	maxSize(M)
+	<- 	+origin(math.round(math.random*M), math.round(math.random*M));
+		+destiny(math.round(math.random * M), math.round(math.random * M));
+		!start.
+
 +!start
-	:	maxSize(M)
-	<- 	+destiny(math.round(math.random * M), math.round(math.random * M));
+	:	maxSize(M) &
+		origin(X, Y)
+	<- 	setPosition(X, Y);
 		.my_name(Id);
 		makeArtifact(Id, "grid_env.TaskArtifact", [], ArtId);
 		.print("Artefato criado por: ", Id, " com id ", ArtId);
 		Id::focus(ArtId);
-		Id::start(Id, math.round(math.random*M), math.round(math.random*M));
+		Id::start(Id, X, Y);
 		.print("Initial broadcasting...");
 		.broadcast(achieve, focus_message_task(Id)) ;
 		.at("now + 5 seconds", {+!decide(Id)}).
@@ -46,6 +53,7 @@
 +arrive(X, Y)[source(A)]
 	: destiny(X, Y)
 	<- .print("I arrived in my destiny by ", A);
+		setPosition(X, Y);
 	   .my_name(N);
 	   .print(N);
 	   .kill_agent(N).
