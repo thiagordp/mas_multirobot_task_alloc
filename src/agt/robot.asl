@@ -64,7 +64,7 @@
 	<- .wait(0).
 
 
-+status_task(S)[artifact_id(AId), artifact_name(AId, AtName)]
+@u[atomic] +status_task(S)[artifact_id(AId), artifact_name(AId, AtName)]
 	: S == "running" & 
 	  status(Sr) &
 	  Sr == "idle" & 
@@ -74,6 +74,7 @@
 	  neighborhood(H) & 
 	  (math.abs(X - Rx) + math.abs(Y - Ry)) <= H 
   	<- 
+  	   +task(AtName, X, Y);
   	  -+status("waiting");
 	  .my_name(R);
 	  .print("Robo ", R, " fez bid em ", AId, "name: ", AtName); 
@@ -91,8 +92,7 @@
 
 
 +winner(N)[artifact_id(AId), artifact_name(AId, AtName)]
-	: position_x(X)[artifact_id(AId)] &
-	  position_y(Y)[artifact_id(AId)] &
+	: task(AtName, X, Y) &
 	  N \== no_winner &
 	  status(S) &
 	  .my_name(Me) &
@@ -100,11 +100,12 @@
 	 <-	  
 	  if (Me == N){
 	  	-+status("moving");
-	  	+task(AtName, X, Y);
+	  	//+task(AtName, X, Y);
 	  	.print(AtName, " sent accept, then I'm moving to ", AtName);
 	  	!move(AtName);
 	  }
 	  else {
+	  	 -task(AtName, X, Y);
 		 -+status("idle");
 		 .print(AtName, " sent cancel, I'm going back to state of idle");
 	  }.
