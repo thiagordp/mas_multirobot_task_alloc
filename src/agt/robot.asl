@@ -33,7 +33,7 @@ status("idle").
   	  -+status("waiting");
 	  .my_name(R);
 	  .print("Robo ", R, " fez bid em ", AId, "name: ", AtName); 
-	  +focused(AId);
+	  +myfocused(AId);
 	  bid(Rx, Ry)[artifact_id(AId)].
 	
 /*
@@ -42,11 +42,13 @@ status("idle").
 +status_task(S)[artifact_id(AId), artifact_name(AId, AtName)]
 	<- 
 	  .print("Stop focus ", AId, " task: ", AtName);
-	  stopFocus(AId).
+	  lookupArtifact(AtName, ToolId);
+	  stopFocus(ToolId).
 
 
 +winner(N)[artifact_id(AId), artifact_name(AId, AtName)]
-	:
+	: position_x(X)[artifact_id(AId)] &
+	  position_y(Y)[artifact_id(AId)] &
 	  N \== no_winner &
 	  status(S) &
 	  .my_name(Me) &
@@ -54,7 +56,7 @@ status("idle").
 	 <-	  
 	  if (Me == N){
 	  	-+status("moving");
-	  	+task(AtName);
+	  	+task(AtName, X, Y);
 	  	.print(AtName, " sent accept, then I'm moving to ", AtName);
 	  	!move(AtName);
 	  }
@@ -67,26 +69,28 @@ status("idle").
 	.wait(0).
 	
 +!move(AtName)
+	:	task(TName, X, Y)
 	<-  -+status("processing");
+		-+pos(X, Y);
 		.print("I arrived to ", AtName);
 		.send(AtName, tell, hello(AtName));
 		.print("Update").
 
 +destiny(X, Y)[source(A)]
-	:	task(TName) &
+	:	task(TName,_ ,_) &
 		A == TName
 	<-	.print("I received destiny from ", A);
 		!moveUntilDestiny(X, Y).
 		
 +!moveUntilDestiny(X, Y)
-	:	task(TName) &
-		focused(AId)
+	:	task(TName, _, _) &
+		myfocused(AId)
 	<-	.print("I taking ", TName, " until ", X, Y);
 		.send(TName, tell, arrive(X, Y));
 		-+pos(X, Y);
 		-+status("idle");
 		stopFocus(AId);
-		-focused(AId).
+		-myfocused(AId).
 		
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
