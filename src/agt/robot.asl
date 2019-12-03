@@ -1,14 +1,59 @@
 // Agent robot in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
-pos(math.round(math.random * 100), math.round(math.random * 100)).
-neighborhood(100).
-status("idle").
+//maxSize(10).
+//pos(math.round(math.random * 10), math.round(math.random * 100)).
+//neighborhood(10).
+//status("idle").
 
 /* Initial goals */
+!start.
 
 /* Plans */
 	
++!start
+	: maxSize(M)
+	 <- +pos(math.round(math.random * M), math.round(math.random * M));
+	 	+status("idle"). 
+
+
++status("idle")
+	<- .at("now + 1 seconds", {+!decideMove}).
+	
++!decideMove
+	: status(S) &
+	  S == "idle"
+	<- !defineMove.
+	
++!decideMove
+	<- .wait(0).
+	
++!defineMove
+	: pos(X, Y) &
+	  maxSize(M)
+	<- D = math.round(math.random*3);
+		if(D == 0 & X + 1 <= M  ){
+			!moveNeighbor(X + 1, Y);	
+		}
+		elif( D == 1 & X - 1 >= 0 ){
+			!moveNeighbor(X - 1, Y);
+		}
+		elif( D == 2 & Y - 1 >= 0 ){
+			!moveNeighbor(X, Y - 1);
+		}
+		elif( D == 3 & Y + 1 <= M ){
+			!moveNeighbor(X, Y + 1);
+		}
+		else{
+			!defineMove;
+		}.
+		
++!moveNeighbor(X, Y)
+	<- 	.print("I am moving to (", X, ", ",  Y, ")");
+		-+status("moving");
+		-+pos(X, Y);
+		-+status("idle").
+
 +!focus_message_task(AtName)  
 	: 	status("idle")
 	<-  lookupArtifact(AtName, ToolId); // Busca pelo nome do artefato e atribui um Id.
@@ -16,7 +61,6 @@ status("idle").
 		//.print("!focus_message ... AId: ", AtName, " TI: ", ToolId).
 
 +!focus_message_task(AtName) 
-	: status(S)
 	<- .wait(0).
 
 
@@ -88,9 +132,9 @@ status("idle").
 	<-	.print("I taking ", TName, " until ", X, Y);
 		.send(TName, tell, arrive(X, Y));
 		-+pos(X, Y);
-		-+status("idle");
 		stopFocus(AId);
-		-myfocused(AId).
+		-myfocused(AId);
+		-+status("idle").
 		
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

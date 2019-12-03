@@ -16,10 +16,12 @@ mas mas_multirobot_task_alloc {
 
     agent robot : robot.asl {
     	instances : 5
+    	beliefs: maxSize(10), neighborhood(2)
     }
     
     agent task : task.asl{
     	instances: 10
+    	beliefs: maxSize(10)
     }
     
     workspace grid {

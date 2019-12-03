@@ -1,18 +1,20 @@
 // Agent task in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
-destiny(math.round(math.random * 100), math.round(math.random * 100)).
+//destiny(math.round(math.random * 100), math.round(math.random * 100)).
 /* Initial goals */
 !start.
 
 /* Plans */
 
 +!start
-	<- 	.my_name(Id);
+	:	maxSize(M)
+	<- 	+destiny(math.round(math.random * M), math.round(math.random * M));
+		.my_name(Id);
 		makeArtifact(Id, "grid_env.TaskArtifact", [], ArtId);
 		.print("Artefato criado por: ", Id, " com id ", ArtId);
 		Id::focus(ArtId);
-		Id::start(Id, math.round(math.random*100), math.round(math.random*100));
+		Id::start(Id, math.round(math.random*M), math.round(math.random*M));
 		.print("Initial broadcasting...");
 		.broadcast(achieve, focus_message_task(Id)) ;
 		.at("now + 5 seconds", {+!decide(Id)}).
