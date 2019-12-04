@@ -13,17 +13,18 @@
 */
 
 mas mas_multirobot_task_alloc {
-
+	/* 
     agent task : task.asl{
-    	instances: 100
+    	instances: 10
     }
     
     agent robot: robot.asl{
-    	beliefs: maxSize(100), neighborhood(10)
-    	instances: 20
+    	instances: 5
     }
-    
-    agent creator : task_creator.asl
+    */
+    agent creator : task_creator.asl{
+    	beliefs: robots(5), tasks(20)
+    }
     
     class-path: lib                      // java class path
 }

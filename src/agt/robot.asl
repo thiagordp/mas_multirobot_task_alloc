@@ -1,16 +1,13 @@
 // Agent robot in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
-//maxSize(10).
-//pos(math.round(math.random * 10), math.round(math.random * 100)).
-//neighborhood(10).
-//status("idle").
+maxSize(10).
+neighborhood(5).
 
 /* Initial goals */
 !set_initial_positions.
 
 /* Plans */
-
 +!set_initial_positions
 	:	maxSize(M)
 	<- 	+pos(math.round(math.random * M), math.round(math.random * M));
@@ -18,10 +15,8 @@
 	
 +!start
 	: pos(X, Y)
-	 <- 
-	    .df_register(robo);
+	 <- .df_register(robo);
 	 	+status("idle"). 
-
 
 +status("idle")
 	<- .at("now + 1 seconds", {+!decideMove}).
@@ -164,6 +159,7 @@
 		-+pos(X, Y);
 		-+status("to_destiny").
 		
+		
 +!arrivedAtDestination(X, Y)
 	:	task(TName, _, _) &
 		myfocused(AId)
@@ -171,8 +167,21 @@
 		.send(TName, tell, arrive(X, Y));
 		stopFocus(AId);
 		-myfocused(AId);
+		!energy_level;
 		-+status("idle").
 		
++!energy_level 
+	:	R = math.random &
+		R < 0.1 
+	<-	.df_search(create, L);
+		.my_name(N);
+		.send(L, tell, robot_finish(N));
+		.print("Low Energy... Shutting down");
+		.kill_agent(N).	
+
++!energy_level
+	<-	.wait(0).
+	
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 

@@ -54,7 +54,9 @@ maxSize(10).
 	: destiny(X, Y)	
 	<- .print("I arrived in my destiny by ", A);
 	   .my_name(N);
-	   .print(N);	    
+	   .print(N);
+	   .df_search(create, L);	  
+	   .send(L, tell, task_finish(N));  
 	   .kill_agent(N).
 	    
 
