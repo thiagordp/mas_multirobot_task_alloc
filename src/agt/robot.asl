@@ -19,6 +19,7 @@
 +!start
 	: pos(X, Y)
 	 <- setPosition(X, Y);
+	    .df_register(robo);
 	 	+status("idle"). 
 
 

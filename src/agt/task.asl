@@ -22,8 +22,9 @@
 		.print("Artefato criado por: ", Id, " com id ", ArtId);
 		Id::focus(ArtId);
 		Id::start(Id, X, Y);
-		.print("Initial broadcasting...");
-		.broadcast(achieve, focus_message_task(Id)) ;
+		.print("Initial broadcasting para os robos...");
+		.df_search(robo, L);
+		.send(L, achieve, focus_message_task(Id));
 		.at("now + 5 seconds", {+!decide(Id)}).
 
 +!decide(Id) : 
@@ -37,12 +38,10 @@
 	: Id::bid_count(C) & C == 0 // TODO: É unificação ou comparação mesmo?
 	<- 
 	.print("Broadcasting ", Id);
-	.broadcast(achieve, focus_message_task(Id));
+	.df_search(robo, L);
+	.send(L, achieve, focus_message_task(Id));
 	.at("now + 5 seconds", {+!decide(Id)}).
 
-+!focus_message_task(A)  
-	<-  .wait(0).
-	
 +hello(AId)[source(A)]
 	: AId::winner(N) &
 	  N == A &
