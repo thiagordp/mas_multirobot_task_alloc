@@ -1,28 +1,23 @@
-package grid_env;
+package grid;
 
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-
 import cartago.Artifact;
 import cartago.OPERATION;
 
-public class TaskPlanet extends Artifact {
+public class AgentPlanet extends Artifact {
 	
-	private static Logger logger = Logger.getLogger(TaskPlanet.class.getName());
+	private static Logger logger = Logger.getLogger(AgentPlanet.class.getName());
 
 	static GridModel model = null;
 	static GridView view;
 	
 	int agentId = -1;
-	boolean isRobot = false;
+	int agentType = -1;
 
 	@OPERATION
-	public void init(int agId, int isRobot) {
+	public void init(int agId, int agentType) {
 		this.agentId = agId;
-		if (isRobot == 1) {
-			this.isRobot = true;
-		}
+		this.agentType = agentType; 
 		initGrid();
 	}
 	
@@ -38,6 +33,9 @@ public class TaskPlanet extends Artifact {
 				view = new GridView(model);
 				view.setEnv(this);
 				view.update();
+			}
+			if (this.agentType == 1) {
+				view.addRobot(this.agentId);
 			}
 		} catch (Exception e) {
 			logger.warning("Erro creating world " + e);

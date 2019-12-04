@@ -18,7 +18,7 @@
 		origin(X, Y)
 	<- 	setPosition(X, Y);
 		.my_name(Id);
-		makeArtifact(Id, "grid_env.TaskArtifact", [], ArtId);
+		makeArtifact(Id, "task.TaskArtifact", [], ArtId);
 		.print("Artefato criado por: ", Id, " com id ", ArtId);
 		Id::focus(ArtId);
 		Id::start(Id, X, Y);

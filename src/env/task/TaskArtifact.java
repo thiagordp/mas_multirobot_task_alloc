@@ -1,7 +1,7 @@
 /**
  * 
  */
-package grid_env;
+package task;
 
 import java.util.LinkedList;
 
