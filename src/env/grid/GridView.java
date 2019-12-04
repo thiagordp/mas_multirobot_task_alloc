@@ -1,4 +1,4 @@
-package grid_env;
+package grid;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,9 +7,10 @@ import java.util.LinkedList;
 import jason.environment.grid.GridWorldModel;
 import jason.environment.grid.GridWorldView;
 
+@SuppressWarnings("serial")
 public class GridView extends GridWorldView {
 
-	TaskPlanet env = null;
+	AgentPlanet env = null;
 	LinkedList<Integer> robots = new LinkedList<Integer>();
 	
 	public GridView(GridWorldModel model) {
@@ -18,7 +19,7 @@ public class GridView extends GridWorldView {
 		repaint();
 	}	
 	
-	public void setEnv(TaskPlanet env) {
+	public void setEnv(AgentPlanet env) {
 		this.env = env;
 	}
 	

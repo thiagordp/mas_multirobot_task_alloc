@@ -1,15 +1,12 @@
-package grid_env;
+package grid;
 
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-
 import cartago.Artifact;
 import cartago.OPERATION;
 
-public class TaskPlanet extends Artifact {
+public class AgentPlanet extends Artifact {
 	
-	private static Logger logger = Logger.getLogger(TaskPlanet.class.getName());
+	private static Logger logger = Logger.getLogger(AgentPlanet.class.getName());
 
 	static GridModel model = null;
 	static GridView view;
