@@ -23,7 +23,6 @@ public class GridModel extends GridWorldModel{
 		super(w, h, nbAgs);
 	}
 	
-	
 	static GridModel createGrid() throws Exception {
 		GridModel model = GridModel.create(11, 11, 10);
 		return model;		

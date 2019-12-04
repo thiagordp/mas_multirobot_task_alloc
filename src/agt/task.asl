@@ -26,37 +26,40 @@
 		.broadcast(achieve, focus_message_task(Id)) ;
 		.at("now + 5 seconds", {+!decide(Id)}).
 
-+!decide(Id) : 
-	Id::bid_count(C) &
-	C > 0
-	<- 
-	.print("Deliberando ", Id, " C: ", C);
-	Id::stop.
++!decide(Id)
+	: 	Id::bid_count(C) &
+		C > 0
+	<- 	.print("Deliberando ", Id, " C: ", C);
+		Id::stop.
 
 +!decide(Id)
-	: Id::bid_count(C) & C == 0 // TODO: É unificação ou comparação mesmo?
-	<- 
-	.print("Broadcasting ", Id);
-	.broadcast(achieve, focus_message_task(Id));
-	.at("now + 5 seconds", {+!decide(Id)}).
+	: 	Id::bid_count(C) &
+		C == 0 & // TODO: É unificação ou comparação mesmo?
+		origin(X, Y)
+	<- 	setPosition(X, Y);
+		.print("Broadcasting ", Id);
+		.broadcast(achieve, focus_message_task(Id));
+		.at("now + 5 seconds", {+!decide(Id)}).
 
 +!focus_message_task(A)  
 	<-  .wait(0).
 	
 +hello(AId)[source(A)]
-	: AId::winner(N) &
-	  N == A &
-	  destiny(X, Y)
-	<- .print("I received the message from ", A);
-	   .send(A, tell, destiny(X, Y)).
+	:	AId::winner(N) &
+	  	N == A &
+	  	origin(X, Y) &
+	  	destiny(Dx, Dy)
+	<- 	removeAgent(X, Y);
+		.print("I received the message from ", A);
+	   	.send(A, tell, destiny(Dx, Dy)).
 
 +arrive(X, Y)[source(A)]
-	: destiny(X, Y)
-	<- .print("I arrived in my destiny by ", A);
-		setPosition(X, Y);
-	   .my_name(N);
-	   .print(N);
-	   .kill_agent(N).
+	: 	destiny(X, Y)
+	<- 	.print("I arrived in my destiny by ", A);
+		.my_name(N);
+		.kill_agent(N).
+//	   	.at("now + 10 seconds", {+!start}).
+
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

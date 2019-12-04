@@ -105,10 +105,8 @@
 	  S == "waiting"
 	 <-	  
 	  if (Me == N){
-	  	-+status("moving");
-	  	//+task(AtName, X, Y);
 	  	.print(AtName, " sent accept, then I'm moving to ", AtName);
-	  	!move(AtName);
+	  	-+status("processing");
 	  }
 	  else {
 	  	 -task(AtName, X, Y);
@@ -119,25 +117,54 @@
 +winner(N)[artifact_id(AId)] <- 
 	.wait(0).
 	
-+!move(AtName)
-	:	task(TName, X, Y)
-	<-  -+status("processing");
-		-+pos(X, Y);
-		.print("I arrived to ", AtName);
-		.send(AtName, tell, hello(AtName));
++status("processing")
+	<- 	.at("now + 1 seconds", {+!moveToTask}).
+	
++!moveToTask
+	:	task(TName, X, Y) &
+		pos(Rx, Ry)
+	<-  -+status("moving");
+		if (Rx > X) {
+			!move(Rx - 1, Ry);
+		}
+		elif (Rx < X) {
+			!move(Rx + 1, Ry);
+		} 
+		elif (Ry > Y) {
+			!move(Rx, Ry - 1);
+		}
+		elif (Ry < Y) {
+			!move(Rx, Ry + 1);
+		}
+		else {
+			!arrivedAtTask(Rx, Ry);
+		}.
+	
++!arrivedAtTask(X, Y)
+	:	task(TName, _, _) &
+		myfocused(AId)
+	<-	setArrivedAtTask;
+		.print("I arrived to ", TName);
+		.send(TName, tell, hello(TName));
 		.print("Update").
+
++!move(X, Y)
+	<- 	-+status("moving");
+		-+pos(X, Y);
+		setPosition(X, Y);
+		-+status("processing").
+
 
 +destiny(X, Y)[source(A)]
 	:	task(TName,_ ,_) &
 		A == TName &
 		pos(Rx, Ry)
-	<-	.print("I received destiny from ", A);
+	<-	.print("I received destiny from ", A, " (", X, ", ",  Y, ")");
 		-+displacement(X, Y);
 		-+status("to_destiny").
 		
 +status("to_destiny")
-	<- 	.print("to_destiny");
-		.at("now + 1 seconds", {+!defineMoveDestiny}).
+	<- 	.at("now + 1 seconds", {+!defineMoveDestiny}).
 	
 +!defineMoveDestiny
 	: 	pos(Rx, Ry) &
@@ -167,12 +194,13 @@
 +!arrivedAtDestination(X, Y)
 	:	task(TName, _, _) &
 		myfocused(AId)
-	<-	.print("I arrived at my destination ");
+	<-	setAttivedAtDestination;
+		.print("I arrived at my destination ");
 		.send(TName, tell, arrive(X, Y));
 		stopFocus(AId);
 		-myfocused(AId);
 		-+status("idle").
-		
+
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 

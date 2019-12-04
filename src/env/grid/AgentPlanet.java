@@ -26,6 +26,21 @@ public class AgentPlanet extends Artifact {
 		model.setAgPos(this.agentId, x, y);
 	}
 	
+	@OPERATION
+	public void removeAgent(int x, int y) {
+		model.remove(this.agentId, x, y);
+	}
+	
+	@OPERATION
+	public void setArrivedAtTask() {
+		view.addRobotWithTask(this.agentId);
+	}
+	
+	@OPERATION
+	public void setAttivedAtDestination() {
+		view.removeRobotWithTask(this.agentId);		
+	}
+	
 	public synchronized void initGrid() {
 		try {
 			if (model == null) {
