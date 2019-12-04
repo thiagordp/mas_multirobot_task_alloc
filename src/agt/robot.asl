@@ -18,7 +18,7 @@
 	
 +!start
 	: pos(X, Y)
-	 <- setPosition(X, Y);
+	 <- 
 	    .df_register(robo);
 	 	+status("idle"). 
 
@@ -58,7 +58,7 @@
 	<- 	.print("I am moving to (", X, ", ",  Y, ")");
 		-+status("moving");
 		-+pos(X, Y);
-		setPosition(X, Y);
+		
 		-+status("idle").
 
 +!focus_message_task(AtName)  
@@ -93,7 +93,7 @@
  */
 +status_task(S)[artifact_id(AId), artifact_name(AId, AtName)]
 	<- 
-	  .print("Stop focus ", AId, " task: ", AtName);
+	  //.print("Stop focus ", AId, " task: ", AtName);
 	  lookupArtifact(AtName, ToolId);
 	  stopFocus(ToolId).
 
@@ -162,7 +162,6 @@
 +!moveToDestiny(X, Y)
 	<- 	-+status("moving");
 		-+pos(X, Y);
-		setPosition(X, Y);
 		-+status("to_destiny").
 		
 +!arrivedAtDestination(X, Y)

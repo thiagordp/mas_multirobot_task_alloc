@@ -1,6 +1,7 @@
 // Agent task in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
+maxSize(10).
 //destiny(math.round(math.random * 100), math.round(math.random * 100)).
 /* Initial goals */
 !set_initial_positions.
@@ -16,7 +17,7 @@
 +!start
 	:	maxSize(M) &
 		origin(X, Y)
-	<- 	setPosition(X, Y);
+	<- 	
 		.my_name(Id);
 		makeArtifact(Id, "task.TaskArtifact", [], ArtId);
 		.print("Artefato criado por: ", Id, " com id ", ArtId);
@@ -50,12 +51,12 @@
 	   .send(A, tell, destiny(X, Y)).
 
 +arrive(X, Y)[source(A)]
-	: destiny(X, Y)
+	: destiny(X, Y)	
 	<- .print("I arrived in my destiny by ", A);
-		setPosition(X, Y);
 	   .my_name(N);
-	   .print(N);
+	   .print(N);	    
 	   .kill_agent(N).
+	    
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
