@@ -1,6 +1,7 @@
 // Agent task in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
+maxSize(10).
 //destiny(math.round(math.random * 100), math.round(math.random * 100)).
 /* Initial goals */
 !set_initial_positions.
@@ -22,8 +23,9 @@
 		.print("Artefato criado por: ", Id, " com id ", ArtId);
 		Id::focus(ArtId);
 		Id::start(Id, X, Y);
-		.print("Initial broadcasting...");
-		.broadcast(achieve, focus_message_task(Id)) ;
+		.print("Initial broadcasting para os robos...");
+		.df_search(robo, L);
+		.send(L, achieve, focus_message_task(Id));
 		.at("now + 5 seconds", {+!decide(Id)}).
 
 +!decide(Id)
@@ -38,12 +40,10 @@
 		origin(X, Y)
 	<- 	setPosition(X, Y);
 		.print("Broadcasting ", Id);
-		.broadcast(achieve, focus_message_task(Id));
+		.df_search(robo, L);
+		.send(L, achieve, focus_message_task(Id));
 		.at("now + 5 seconds", {+!decide(Id)}).
 
-+!focus_message_task(A)  
-	<-  .wait(0).
-	
 +hello(AId)[source(A)]
 	:	AId::winner(N) &
 	  	N == A &
@@ -58,7 +58,6 @@
 	<- 	.print("I arrived in my destiny by ", A);
 		.my_name(N);
 		.kill_agent(N).
-//	   	.at("now + 10 seconds", {+!start}).
 
 
 { include("$jacamoJar/templates/common-cartago.asl") }

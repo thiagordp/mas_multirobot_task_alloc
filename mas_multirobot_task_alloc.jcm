@@ -14,6 +14,17 @@
 
 mas mas_multirobot_task_alloc {
 
+//    agent task : task.asl{
+//    	instances: 100
+//    }
+//    
+//    agent robot: robot.asl{
+//    	beliefs: maxSize(100), neighborhood(10)
+//    	instances: 20
+//    }
+//    
+//    agent creator : task_creator.asl
+    
     agent task1 : task.asl{
     	focus: grid.t1view
     	beliefs: maxSize(10)

@@ -19,6 +19,7 @@
 +!start
 	: pos(X, Y)
 	 <- setPosition(X, Y);
+	    .df_register(robo);
 	 	+status("idle"). 
 
 
@@ -64,7 +65,6 @@
 	: 	status("idle")
 	<-  lookupArtifact(AtName, ToolId); // Busca pelo nome do artefato e atribui um Id.
 		focus(ToolId).
-		//.print("!focus_message ... AId: ", AtName, " TI: ", ToolId).
 
 +!focus_message_task(AtName) 
 	<- .wait(0).
@@ -92,7 +92,7 @@
  */
 +status_task(S)[artifact_id(AId), artifact_name(AId, AtName)]
 	<- 
-	  .print("Stop focus ", AId, " task: ", AtName);
+	  //.print("Stop focus ", AId, " task: ", AtName);
 	  lookupArtifact(AtName, ToolId);
 	  stopFocus(ToolId).
 
