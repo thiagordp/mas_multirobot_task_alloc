@@ -5,7 +5,8 @@ import jason.environment.grid.Location;
 
 public class GridModel extends GridWorldModel{
 	
-	public static final int TASK = 32;
+	public static final int ROBOT = 1;
+	public static final int TASK = 2;
 
 	// singleton pattern
     protected static GridModel model = null;
@@ -25,11 +26,6 @@ public class GridModel extends GridWorldModel{
 	
 	public void setId(String id) {
 		this.id = id;
-	}
-	
-	public void setTask(int x, int y) {
-		task = new Location(x, y);
-		data[x][y] = TASK;
 	}
 	
 	static GridModel createGrid() throws Exception {

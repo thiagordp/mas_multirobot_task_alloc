@@ -15,14 +15,12 @@ public class TaskPlanet extends Artifact {
 	static GridView view;
 	
 	int agentId = -1;
-	boolean isRobot = false;
+	int agentType = -1;
 
 	@OPERATION
-	public void init(int agId, int isRobot) {
+	public void init(int agId, int agentType) {
 		this.agentId = agId;
-		if (isRobot == 1) {
-			this.isRobot = true;
-		}
+		this.agentType = agentType; 
 		initGrid();
 	}
 	
@@ -38,6 +36,9 @@ public class TaskPlanet extends Artifact {
 				view = new GridView(model);
 				view.setEnv(this);
 				view.update();
+			}
+			if (this.agentType == 1) {
+				view.addRobot(this.agentId);
 			}
 		} catch (Exception e) {
 			logger.warning("Erro creating world " + e);

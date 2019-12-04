@@ -29,6 +29,21 @@ mas mas_multirobot_task_alloc {
     	beliefs: maxSize(10)
     }
     
+    agent task3 : task.asl{
+    	focus: grid.t3view
+    	beliefs: maxSize(10)
+    }
+    
+    agent task4 : task.asl{
+    	focus: grid.t4view
+    	beliefs: maxSize(10)
+    }
+    
+    agent task5 : task.asl{
+    	focus: grid.t5view
+    	beliefs: maxSize(10)
+    }
+    
     agent robot1: robot.asl{
     	focus: grid.r1view
     	beliefs: maxSize(10), neighborhood(3)
@@ -37,8 +52,11 @@ mas mas_multirobot_task_alloc {
     workspace grid {
     	artifact t1view: grid_env.TaskPlanet(0, 0)
     	artifact t2view: grid_env.TaskPlanet(1, 0)
+    	artifact t3view: grid_env.TaskPlanet(2, 0)
+    	artifact t4view: grid_env.TaskPlanet(3, 0)
+    	artifact t5view: grid_env.TaskPlanet(4, 0)
 
-    	artifact r1view: grid_env.TaskPlanet(2, 1)
+    	artifact r1view: grid_env.TaskPlanet(5, 1)
     }
     
     class-path: lib                      // java class path

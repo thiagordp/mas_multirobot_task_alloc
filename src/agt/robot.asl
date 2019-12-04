@@ -23,7 +23,7 @@
 
 
 +status("idle")
-	<- .at("now + 2 seconds", {+!decideMove}).
+	<- .at("now + 1 seconds", {+!decideMove}).
 	
 +!decideMove
 	: status(S) &
@@ -129,16 +129,46 @@
 
 +destiny(X, Y)[source(A)]
 	:	task(TName,_ ,_) &
-		A == TName
+		A == TName &
+		pos(Rx, Ry)
 	<-	.print("I received destiny from ", A);
-		!moveUntilDestiny(X, Y).
+		-+displacement(X, Y);
+		-+status("to_destiny").
 		
-+!moveUntilDestiny(X, Y)
++status("to_destiny")
+	<- 	.print("to_destiny");
+		.at("now + 1 seconds", {+!defineMoveDestiny}).
+	
++!defineMoveDestiny
+	: 	pos(Rx, Ry) &
+		displacement(X, Y)
+	<-	if (Rx > X) {
+			!moveToDestiny(Rx - 1, Ry);
+		}
+		elif (Rx < X) {
+			!moveToDestiny(Rx + 1, Ry);
+		} 
+		elif (Ry > Y) {
+			!moveToDestiny(Rx, Ry - 1);
+		}
+		elif (Ry < Y) {
+			!moveToDestiny(Rx, Ry + 1);
+		}
+		else {
+			!arrivedAtDestination(Rx, Ry);
+		}.
+
++!moveToDestiny(X, Y)
+	<- 	-+status("moving");
+		-+pos(X, Y);
+		setPosition(X, Y);
+		-+status("to_destiny").
+		
++!arrivedAtDestination(X, Y)
 	:	task(TName, _, _) &
 		myfocused(AId)
-	<-	.print("I taking ", TName, " until ", X, Y);
+	<-	.print("I arrived at my destination ");
 		.send(TName, tell, arrive(X, Y));
-		-+pos(X, Y);
 		stopFocus(AId);
 		-myfocused(AId);
 		-+status("idle").
