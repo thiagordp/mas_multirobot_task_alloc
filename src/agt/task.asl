@@ -54,10 +54,14 @@ maxSize(10).
 	   	.send(A, tell, destiny(Dx, Dy)).
 
 +arrive(X, Y)[source(A)]
-	: 	destiny(X, Y)
-	<- 	.print("I arrived in my destiny by ", A);
-		.my_name(N);
-		.kill_agent(N).
+	: destiny(X, Y)	
+	<- .print("I arrived in my destiny by ", A);
+	   .my_name(N);
+	   .print(N);
+	   .df_search(create, L);	  
+	   .send(L, tell, task_finish(N));  
+	   .kill_agent(N).
+	    
 
 
 { include("$jacamoJar/templates/common-cartago.asl") }
