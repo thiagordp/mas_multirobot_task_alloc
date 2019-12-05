@@ -11,6 +11,8 @@ import jason.asSyntax.*;
 
 @SuppressWarnings("serial")
 public class create_robot extends DefaultInternalAction {
+	
+	public static final int MAX_SIZE = 20;
 
 	@Override
 	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
@@ -29,9 +31,9 @@ public class create_robot extends DefaultInternalAction {
 		createC.addId(id);
 		
 		// use Settings to add initial beliefs and goals for the new agent
-		// (as used in the .mas2j project file)
+		// (as used in the .mas2j project fieeeeeele)
 		Settings sett = new Settings();
-		sett.addOption(Settings.INIT_BELS, "myId(" + createC.newCount() + ")");
+		sett.addOption(Settings.INIT_BELS, "myId(" + createC.newCount() + "), maxSize(" + MAX_SIZE  + ")");
 
 		String name = "robot" + id;
 		name = rs.createAgent(name, "robot.asl", null, null, null, sett, ts.getAg());

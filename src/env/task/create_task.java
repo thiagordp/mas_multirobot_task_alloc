@@ -14,6 +14,8 @@ import jason.asSyntax.*;
  */
 @SuppressWarnings("serial")
 public class create_task extends DefaultInternalAction {
+	
+	public static final int MAX_SIZE = 20;
 
 	@Override
 	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
@@ -34,7 +36,7 @@ public class create_task extends DefaultInternalAction {
 		// use Settings to add initial beliefs and goals for the new agent
 		// (as used in the .mas2j project file)
 		Settings sett = new Settings();
-		sett.addOption(Settings.INIT_BELS, "myId(" + createC.newCount() + ")");
+		sett.addOption(Settings.INIT_BELS, "myId(" + createC.newCount() + "), maxSize(" + MAX_SIZE  + ")");
 
 		String name = "task" + id;
 		name = rs.createAgent(name, "task.asl", null, null, null, sett, ts.getAg());

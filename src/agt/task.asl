@@ -1,7 +1,6 @@
 // Agent task in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
-maxSize(10).
 //destiny(math.round(math.random * 100), math.round(math.random * 100)).
 /* Initial goals */
 !set_initial_positions.
@@ -15,7 +14,7 @@ maxSize(10).
 		.my_name(Id);
 		.concat(Id, "view", V);
 		.print(V);
-		makeArtifact(V, "grid.AgentPlanet", [], ArtId);
+		makeArtifact(V, "grid.AgentPlanet", [M], ArtId);
 		focus(ArtId);
 		!start.
 

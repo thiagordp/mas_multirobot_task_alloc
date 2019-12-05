@@ -6,17 +6,16 @@ import cartago.OPERATION;
 
 public class AgentPlanet extends Artifact {
 	
+	public static final int NB_AG = 50;
+	
 	private static Logger logger = Logger.getLogger(AgentPlanet.class.getName());
 
 	static GridModel model = null;
 	static GridView view;
-	
-	int agentId = -1;
-	int agentType = -1;
 
 	@OPERATION
-	public void init() {
-		initGrid();
+	public void init(int maxSize) {
+		initGrid(maxSize);
 	}
 	
 	@OPERATION
@@ -44,10 +43,11 @@ public class AgentPlanet extends Artifact {
 		view.removeRobotWithTask(agId);		
 	}
 	
-	public synchronized void initGrid() {
+	public synchronized void initGrid(int maxSize) {
 		try {
 			if (model == null) {
-				model = GridModel.createGrid();
+				maxSize++;
+				model = GridModel.createGrid(maxSize, NB_AG);
 				view = new GridView(model);
 				view.setEnv(this);
 				view.update();

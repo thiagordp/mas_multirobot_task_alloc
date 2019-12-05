@@ -1,7 +1,6 @@
 // Agent robot in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
-maxSize(10).
 neighborhood(5).
 
 /* Initial goals */
@@ -9,13 +8,13 @@ neighborhood(5).
 
 /* Plans */
 +!set_initial_positions
-	:	maxSize(M) &
-		myId(MId)
+	:	myId(MId) &
+		maxSize(M)
 	<- 	+pos(math.round(math.random * M), math.round(math.random * M));
 		.my_name(Id);
 		.concat(Id, "view", V);
 		.print(V);
-		makeArtifact(V, "grid.AgentPlanet", [], ArtId);
+		makeArtifact(V, "grid.AgentPlanet", [M], ArtId);
 		focus(ArtId);
 		addRobot(MId);
 		!start.

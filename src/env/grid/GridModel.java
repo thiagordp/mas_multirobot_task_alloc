@@ -5,9 +5,6 @@ import jason.environment.grid.Location;
 
 public class GridModel extends GridWorldModel{
 	
-	public static final int ROBOT = 1;
-	public static final int TASK = 2;
-
 	// singleton pattern
     protected static GridModel model = null;
     Location task;
@@ -23,8 +20,8 @@ public class GridModel extends GridWorldModel{
 		super(w, h, nbAgs);
 	}
 	
-	static GridModel createGrid() throws Exception {
-		GridModel model = GridModel.create(11, 11, 10);
+	static GridModel createGrid(int size, int nbAgs) throws Exception {
+		GridModel model = GridModel.create(size, size, nbAgs);
 		return model;		
 	}
 
