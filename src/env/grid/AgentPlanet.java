@@ -15,30 +15,33 @@ public class AgentPlanet extends Artifact {
 	int agentType = -1;
 
 	@OPERATION
-	public void init(int agId, int agentType) {
-		this.agentId = agId;
-		this.agentType = agentType; 
+	public void init() {
 		initGrid();
 	}
 	
 	@OPERATION
-	public void setPosition(int x, int y) {
-		model.setAgPos(this.agentId, x, y);
+	public void setPosition(int agId, int x, int y) {
+		model.setAgPos(agId, x, y);
 	}
 	
 	@OPERATION
-	public void removeAgent(int x, int y) {
-		model.remove(this.agentId, x, y);
+	public void removeAgent(int agId, int x, int y) {
+		model.remove(agId, x, y);
 	}
 	
 	@OPERATION
-	public void setArrivedAtTask() {
-		view.addRobotWithTask(this.agentId);
+	public void addRobot(int agId) {
+		view.addRobot(agId);
 	}
 	
 	@OPERATION
-	public void setAttivedAtDestination() {
-		view.removeRobotWithTask(this.agentId);		
+	public void setArrivedAtTask(int agId) {
+		view.addRobotWithTask(agId);
+	}
+	
+	@OPERATION
+	public void setAttivedAtDestination(int agId) {
+		view.removeRobotWithTask(agId);		
 	}
 	
 	public synchronized void initGrid() {
@@ -48,9 +51,6 @@ public class AgentPlanet extends Artifact {
 				view = new GridView(model);
 				view.setEnv(this);
 				view.update();
-			}
-			if (this.agentType == 1) {
-				view.addRobot(this.agentId);
 			}
 		} catch (Exception e) {
 			logger.warning("Erro creating world " + e);

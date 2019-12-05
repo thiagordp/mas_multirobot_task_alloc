@@ -62,8 +62,9 @@ random_wait(R) :- R = math.round(math.random * 2000) + 500.
 		C < T 
  	<-  .print("Creating robots. ", (R/1000));
 	 	.wait(R);
-	 	.concat("robot", R, St);
-		.create_agent(St, "robot.asl");
+//	 	.concat("robot", R, St);
+//		.create_agent(St, "robot.asl");
+		robot.create_robot;
 		-+count_robots(C+1);
 		!create_tasks.
 

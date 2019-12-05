@@ -9,13 +9,21 @@ neighborhood(5).
 
 /* Plans */
 +!set_initial_positions
-	:	maxSize(M)
+	:	maxSize(M) &
+		myId(MId)
 	<- 	+pos(math.round(math.random * M), math.round(math.random * M));
+		.my_name(Id);
+		.concat(Id, "view", V);
+		.print(V);
+		makeArtifact(V, "grid.AgentPlanet", [], ArtId);
+		focus(ArtId);
+		addRobot(MId);
 		!start.
 	
 +!start
-	: pos(X, Y)
-	 <- setPosition(X, Y);
+	: 	pos(X, Y) &
+		myId(MId)
+	 <- setPosition(MId, X, Y);
 	    .df_register(robo);
 	 	+status("idle"). 
 
@@ -51,10 +59,11 @@ neighborhood(5).
 		}.
 		
 +!moveNeighbor(X, Y)
+	: 	myId(MId)
 	<- 	.print("I am moving to (", X, ", ",  Y, ")");
 		-+status("moving");
 		-+pos(X, Y);
-		setPosition(X, Y);
+		setPosition(MId, X, Y);
 		-+status("idle").
 
 +!focus_message_task(AtName)  
@@ -138,18 +147,19 @@ neighborhood(5).
 	
 +!arrivedAtTask(X, Y)
 	:	task(TName, _, _) &
-		myfocused(AId)
-	<-	setArrivedAtTask;
+		myfocused(AId) &
+		myId(MId)
+	<-	setArrivedAtTask(MId);
 		.print("I arrived to ", TName);
 		.send(TName, tell, hello(TName));
 		.print("Update").
 
 +!move(X, Y)
+	: myId(MId)
 	<- 	-+status("moving");
 		-+pos(X, Y);
-		setPosition(X, Y);
+		setPosition(MId, X, Y);
 		-+status("processing").
-
 
 +destiny(X, Y)[source(A)]
 	:	task(TName,_ ,_) &
@@ -182,16 +192,18 @@ neighborhood(5).
 		}.
 
 +!moveToDestiny(X, Y)
+	: myId(MId)
 	<- 	-+status("moving");
 		-+pos(X, Y);
-		setPosition(X, Y);
+		setPosition(MId, X, Y);
 		-+status("to_destiny").
 		
 		
 +!arrivedAtDestination(X, Y)
 	:	task(TName, _, _) &
-		myfocused(AId)
-	<-	setAttivedAtDestination;
+		myfocused(AId) &
+		myId(MId)
+	<-	setAttivedAtDestination(MId);
 		.print("I arrived at my destination ");
 		.send(TName, tell, arrive(X, Y));
 		stopFocus(AId);

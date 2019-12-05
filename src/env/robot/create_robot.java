@@ -1,19 +1,16 @@
 /**
  * 
  */
-package task;
+package robot;
 
 import jason.runtime.*;
 import utils.CreateControls;
 import jason.asSemantics.*;
 import jason.asSyntax.*;
 
-/**
- * @author trdp
- *
- */
+
 @SuppressWarnings("serial")
-public class create_task extends DefaultInternalAction {
+public class create_robot extends DefaultInternalAction {
 
 	@Override
 	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
@@ -36,8 +33,8 @@ public class create_task extends DefaultInternalAction {
 		Settings sett = new Settings();
 		sett.addOption(Settings.INIT_BELS, "myId(" + createC.newCount() + ")");
 
-		String name = "task" + id;
-		name = rs.createAgent(name, "task.asl", null, null, null, sett, ts.getAg());
+		String name = "robot" + id;
+		name = rs.createAgent(name, "robot.asl", null, null, null, sett, ts.getAg());
 		rs.startAgent(name);
 
 		return true;

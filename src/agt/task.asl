@@ -12,12 +12,18 @@ maxSize(10).
 	: 	maxSize(M)
 	<- 	+origin(math.round(math.random*M), math.round(math.random*M));
 		+destiny(math.round(math.random * M), math.round(math.random * M));
+		.my_name(Id);
+		.concat(Id, "view", V);
+		.print(V);
+		makeArtifact(V, "grid.AgentPlanet", [], ArtId);
+		focus(ArtId);
 		!start.
 
 +!start
 	:	maxSize(M) &
-		origin(X, Y)
-	<- 	setPosition(X, Y);
+		origin(X, Y) &
+		myId(Mi)
+	<- 	setPosition(Mi, X, Y);
 		.my_name(Id);
 		makeArtifact(Id, "task.TaskArtifact", [], ArtId);
 		.print("Artefato criado por: ", Id, " com id ", ArtId);
@@ -37,8 +43,9 @@ maxSize(10).
 +!decide(Id)
 	: 	Id::bid_count(C) &
 		C == 0 & // TODO: É unificação ou comparação mesmo?
-		origin(X, Y)
-	<- 	setPosition(X, Y);
+		origin(X, Y) &
+		myId(Mi)
+	<- 	setPosition(Mi, X, Y);
 		.print("Broadcasting ", Id);
 		.df_search(robo, L);
 		.send(L, achieve, focus_message_task(Id));
@@ -48,8 +55,9 @@ maxSize(10).
 	:	AId::winner(N) &
 	  	N == A &
 	  	origin(X, Y) &
-	  	destiny(Dx, Dy)
-	<- 	removeAgent(X, Y);
+	  	destiny(Dx, Dy) &
+	  	myId(MId)
+	<- 	removeAgent(MId, X, Y);
 		.print("I received the message from ", A);
 	   	.send(A, tell, destiny(Dx, Dy)).
 
