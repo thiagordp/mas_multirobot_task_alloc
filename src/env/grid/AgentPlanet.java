@@ -6,36 +6,51 @@ import cartago.OPERATION;
 
 public class AgentPlanet extends Artifact {
 	
+	public static final int NB_AG = 50;
+	
 	private static Logger logger = Logger.getLogger(AgentPlanet.class.getName());
 
 	static GridModel model = null;
 	static GridView view;
-	
-	int agentId = -1;
-	int agentType = -1;
 
 	@OPERATION
-	public void init(int agId, int agentType) {
-		this.agentId = agId;
-		this.agentType = agentType; 
-		initGrid();
+	public void init(int maxSize) {
+		initGrid(maxSize);
 	}
 	
 	@OPERATION
-	public void setPosition(int x, int y) {
-		model.setAgPos(this.agentId, x, y);
+	public void setPosition(int agId, int x, int y) {
+		model.setAgPos(agId, x, y);
 	}
 	
-	public synchronized void initGrid() {
+	@OPERATION
+	public void removeAgent(int agId, int x, int y) {
+		model.remove(agId, x, y);
+	}
+	
+	@OPERATION
+	public void addRobot(int agId) {
+		view.addRobot(agId);
+	}
+	
+	@OPERATION
+	public void setArrivedAtTask(int agId) {
+		view.addRobotWithTask(agId);
+	}
+	
+	@OPERATION
+	public void setAttivedAtDestination(int agId) {
+		view.removeRobotWithTask(agId);		
+	}
+	
+	public synchronized void initGrid(int maxSize) {
 		try {
 			if (model == null) {
-				model = GridModel.createGrid();
+				maxSize++;
+				model = GridModel.createGrid(maxSize, NB_AG);
 				view = new GridView(model);
 				view.setEnv(this);
 				view.update();
-			}
-			if (this.agentType == 1) {
-				view.addRobot(this.agentId);
 			}
 		} catch (Exception e) {
 			logger.warning("Erro creating world " + e);

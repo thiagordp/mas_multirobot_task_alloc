@@ -1,7 +1,6 @@
 // Agent robot in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
-maxSize(10).
 neighborhood(5).
 
 /* Initial goals */
@@ -9,13 +8,22 @@ neighborhood(5).
 
 /* Plans */
 +!set_initial_positions
-	:	maxSize(M)
+	:	myId(MId) &
+		maxSize(M)
 	<- 	+pos(math.round(math.random * M), math.round(math.random * M));
+		.my_name(Id);
+		.concat(Id, "view", V);
+		.print(V);
+		makeArtifact(V, "grid.AgentPlanet", [M], ArtId);
+		focus(ArtId);
+		addRobot(MId);
 		!start.
 	
 +!start
-	: pos(X, Y)
-	 <- .df_register(robo);
+	: 	pos(X, Y) &
+		myId(MId)
+	 <- setPosition(MId, X, Y);
+	    .df_register(robo);
 	 	+status("idle"). 
 
 +status("idle")
@@ -50,17 +58,17 @@ neighborhood(5).
 		}.
 		
 +!moveNeighbor(X, Y)
+	: 	myId(MId)
 	<- 	.print("I am moving to (", X, ", ",  Y, ")");
 		-+status("moving");
 		-+pos(X, Y);
-		
+		setPosition(MId, X, Y);
 		-+status("idle").
 
 +!focus_message_task(AtName)  
 	: 	status("idle")
 	<-  lookupArtifact(AtName, ToolId); // Busca pelo nome do artefato e atribui um Id.
 		focus(ToolId).
-		//.print("!focus_message ... AId: ", AtName, " TI: ", ToolId).
 
 +!focus_message_task(AtName) 
 	<- .wait(0).
@@ -101,10 +109,8 @@ neighborhood(5).
 	  S == "waiting"
 	 <-	  
 	  if (Me == N){
-	  	-+status("moving");
-	  	//+task(AtName, X, Y);
 	  	.print(AtName, " sent accept, then I'm moving to ", AtName);
-	  	!move(AtName);
+	  	-+status("processing");
 	  }
 	  else {
 	  	 -task(AtName, X, Y);
@@ -115,25 +121,55 @@ neighborhood(5).
 +winner(N)[artifact_id(AId)] <- 
 	.wait(0).
 	
-+!move(AtName)
-	:	task(TName, X, Y)
-	<-  -+status("processing");
-		-+pos(X, Y);
-		.print("I arrived to ", AtName);
-		.send(AtName, tell, hello(AtName));
++status("processing")
+	<- 	.at("now + 1 seconds", {+!moveToTask}).
+	
++!moveToTask
+	:	task(TName, X, Y) &
+		pos(Rx, Ry)
+	<-  -+status("moving");
+		if (Rx > X) {
+			!move(Rx - 1, Ry);
+		}
+		elif (Rx < X) {
+			!move(Rx + 1, Ry);
+		} 
+		elif (Ry > Y) {
+			!move(Rx, Ry - 1);
+		}
+		elif (Ry < Y) {
+			!move(Rx, Ry + 1);
+		}
+		else {
+			!arrivedAtTask(Rx, Ry);
+		}.
+	
++!arrivedAtTask(X, Y)
+	:	task(TName, _, _) &
+		myfocused(AId) &
+		myId(MId)
+	<-	setArrivedAtTask(MId);
+		.print("I arrived to ", TName);
+		.send(TName, tell, hello(TName));
 		.print("Update").
+
++!move(X, Y)
+	: myId(MId)
+	<- 	-+status("moving");
+		-+pos(X, Y);
+		setPosition(MId, X, Y);
+		-+status("processing").
 
 +destiny(X, Y)[source(A)]
 	:	task(TName,_ ,_) &
 		A == TName &
 		pos(Rx, Ry)
-	<-	.print("I received destiny from ", A);
+	<-	.print("I received destiny from ", A, " (", X, ", ",  Y, ")");
 		-+displacement(X, Y);
 		-+status("to_destiny").
 		
 +status("to_destiny")
-	<- 	.print("to_destiny");
-		.at("now + 1 seconds", {+!defineMoveDestiny}).
+	<- 	.at("now + 1 seconds", {+!defineMoveDestiny}).
 	
 +!defineMoveDestiny
 	: 	pos(Rx, Ry) &
@@ -155,15 +191,19 @@ neighborhood(5).
 		}.
 
 +!moveToDestiny(X, Y)
+	: myId(MId)
 	<- 	-+status("moving");
 		-+pos(X, Y);
+		setPosition(MId, X, Y);
 		-+status("to_destiny").
 		
 		
 +!arrivedAtDestination(X, Y)
 	:	task(TName, _, _) &
-		myfocused(AId)
-	<-	.print("I arrived at my destination ");
+		myfocused(AId) &
+		myId(MId)
+	<-	setAttivedAtDestination(MId);
+		.print("I arrived at my destination ");
 		.send(TName, tell, arrive(X, Y));
 		stopFocus(AId);
 		-myfocused(AId);

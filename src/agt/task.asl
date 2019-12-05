@@ -1,7 +1,6 @@
 // Agent task in project mas_multirobot_task_alloc
 
 /* Initial beliefs and rules */
-maxSize(10).
 //destiny(math.round(math.random * 100), math.round(math.random * 100)).
 /* Initial goals */
 !set_initial_positions.
@@ -12,12 +11,18 @@ maxSize(10).
 	: 	maxSize(M)
 	<- 	+origin(math.round(math.random*M), math.round(math.random*M));
 		+destiny(math.round(math.random * M), math.round(math.random * M));
+		.my_name(Id);
+		.concat(Id, "view", V);
+		.print(V);
+		makeArtifact(V, "grid.AgentPlanet", [M], ArtId);
+		focus(ArtId);
 		!start.
 
 +!start
 	:	maxSize(M) &
-		origin(X, Y)
-	<- 	
+		origin(X, Y) &
+		myId(Mi)
+	<- 	setPosition(Mi, X, Y);
 		.my_name(Id);
 		makeArtifact(Id, "task.TaskArtifact", [], ArtId);
 		.print("Artefato criado por: ", Id, " com id ", ArtId);
@@ -28,27 +33,32 @@ maxSize(10).
 		.send(L, achieve, focus_message_task(Id));
 		.at("now + 5 seconds", {+!decide(Id)}).
 
-+!decide(Id) : 
-	Id::bid_count(C) &
-	C > 0
-	<- 
-	.print("Deliberando ", Id, " C: ", C);
-	Id::stop.
++!decide(Id)
+	: 	Id::bid_count(C) &
+		C > 0
+	<- 	.print("Deliberando ", Id, " C: ", C);
+		Id::stop.
 
 +!decide(Id)
-	: Id::bid_count(C) & C == 0 // TODO: É unificação ou comparação mesmo?
-	<- 
-	.print("Broadcasting ", Id);
-	.df_search(robo, L);
-	.send(L, achieve, focus_message_task(Id));
-	.at("now + 5 seconds", {+!decide(Id)}).
+	: 	Id::bid_count(C) &
+		C == 0 & // TODO: É unificação ou comparação mesmo?
+		origin(X, Y) &
+		myId(Mi)
+	<- 	setPosition(Mi, X, Y);
+		.print("Broadcasting ", Id);
+		.df_search(robo, L);
+		.send(L, achieve, focus_message_task(Id));
+		.at("now + 5 seconds", {+!decide(Id)}).
 
 +hello(AId)[source(A)]
-	: AId::winner(N) &
-	  N == A &
-	  destiny(X, Y)
-	<- .print("I received the message from ", A);
-	   .send(A, tell, destiny(X, Y)).
+	:	AId::winner(N) &
+	  	N == A &
+	  	origin(X, Y) &
+	  	destiny(Dx, Dy) &
+	  	myId(MId)
+	<- 	removeAgent(MId, X, Y);
+		.print("I received the message from ", A);
+	   	.send(A, tell, destiny(Dx, Dy)).
 
 +arrive(X, Y)[source(A)]
 	: destiny(X, Y)	
@@ -59,6 +69,7 @@ maxSize(10).
 	   .send(L, tell, task_finish(N));  
 	   .kill_agent(N).
 	    
+
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

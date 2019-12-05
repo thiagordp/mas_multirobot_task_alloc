@@ -1,19 +1,16 @@
 /**
  * 
  */
-package task;
+package robot;
 
 import jason.runtime.*;
 import utils.CreateControls;
 import jason.asSemantics.*;
 import jason.asSyntax.*;
 
-/**
- * @author trdp
- *
- */
+
 @SuppressWarnings("serial")
-public class create_task extends DefaultInternalAction {
+public class create_robot extends DefaultInternalAction {
 	
 	public static final int MAX_SIZE = 20;
 
@@ -34,12 +31,12 @@ public class create_task extends DefaultInternalAction {
 		createC.addId(id);
 		
 		// use Settings to add initial beliefs and goals for the new agent
-		// (as used in the .mas2j project file)
+		// (as used in the .mas2j project fieeeeeele)
 		Settings sett = new Settings();
 		sett.addOption(Settings.INIT_BELS, "myId(" + createC.newCount() + "), maxSize(" + MAX_SIZE  + ")");
 
-		String name = "task" + id;
-		name = rs.createAgent(name, "task.asl", null, null, null, sett, ts.getAg());
+		String name = "robot" + id;
+		name = rs.createAgent(name, "robot.asl", null, null, null, sett, ts.getAg());
 		rs.startAgent(name);
 
 		return true;
