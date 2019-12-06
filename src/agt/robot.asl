@@ -7,8 +7,8 @@
 
 /* Initial beliefs and rules */
 neighborhood(5).
-//search_strategy(random).
-search_strategy(unvisited).
+search_strategy(random).
+//search_strategy(unvisited).
 // search_strategy(r_learning).
 
 
@@ -37,7 +37,7 @@ search_strategy(unvisited).
 
 +status("idle")
 	<-	-+exploring(no); 	
-		.at("now + 2 seconds", {+!decideMove}).
+		.at("now + 1 seconds", {+!decideMove}).
 
 +!decideMove
 	: status(S) &

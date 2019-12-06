@@ -29,16 +29,15 @@ public class next_unvisited extends DefaultInternalAction {
 		try {
 			NumberTerm agX = (NumberTerm) args[0]; // Current X position
 			NumberTerm agY = (NumberTerm) args[1]; // Current Y position
-			ListTerm listTerm = (ListTerm) args[2]; // Visited Places
+			List<Term> listT = ((ListTerm) args[2]).getAsList(); // Visited Places
 
 			int gridSize = (int) ((NumberTerm) args[3]).solve();
 			int curX = (int) agX.solve();
 			int curY = (int) agY.solve();
 
-			List<Term> listT = listTerm.getAsList();
 			List<Location> listVisited = new ArrayList<Location>();
 
-			// Pegar os X,Y de cada lista.
+			// Pegar os X,Y de cada item na lista.
 			for (Term term : listT) {
 				List<Term> pos = ((Structure) term).getTerms();
 
@@ -50,7 +49,7 @@ public class next_unvisited extends DefaultInternalAction {
 
 				listVisited.add(new Location(x, y));
 			}
-			
+
 			Location curLoc = new Location(curX, curY);
 			Location nextUnvisited = getNearestUnvisited(listVisited, curLoc, gridSize);
 
