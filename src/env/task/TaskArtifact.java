@@ -5,8 +5,6 @@ package task;
 
 import java.util.LinkedList;
 
-import javax.swing.JOptionPane;
-
 import cartago.AgentId;
 import cartago.Artifact;
 import cartago.OPERATION;

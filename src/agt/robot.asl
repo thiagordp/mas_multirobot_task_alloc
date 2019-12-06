@@ -1,7 +1,16 @@
 // Agent robot in project mas_multirobot_task_alloc
 
+
+/* Includes */
+{ include("explore/move_random.asl") }		// Random Movement Strategy
+{ include("explore/move_unvisited.asl") }	// Move to Unvisited Strategy
+
 /* Initial beliefs and rules */
 neighborhood(5).
+//search_strategy(random).
+search_strategy(unvisited).
+// search_strategy(r_learning).
+
 
 /* Initial goals */
 !set_initial_positions.
@@ -27,8 +36,9 @@ neighborhood(5).
 	 	+status("idle"). 
 
 +status("idle")
-	<- .at("now + 1 seconds", {+!decideMove}).
-	
+	<-	-+exploring(no); 	
+		.at("now + 2 seconds", {+!decideMove}).
+
 +!decideMove
 	: status(S) &
 	  S == "idle"
@@ -36,34 +46,7 @@ neighborhood(5).
 	
 +!decideMove
 	<- .wait(0).
-	
-+!defineMove
-	: pos(X, Y) &
-	  maxSize(M)
-	<- D = math.round(math.random*3);
-		if(D == 0 & X + 1 <= M  ){
-			!moveNeighbor(X + 1, Y);	
-		}
-		elif( D == 1 & X - 1 >= 0 ){
-			!moveNeighbor(X - 1, Y);
-		}
-		elif( D == 2 & Y - 1 >= 0 ){
-			!moveNeighbor(X, Y - 1);
-		}
-		elif( D == 3 & Y + 1 <= M ){
-			!moveNeighbor(X, Y + 1);
-		}
-		else{
-			!defineMove;
-		}.
-		
-+!moveNeighbor(X, Y)
-	: 	myId(MId)
-	<- 	.print("I am moving to (", X, ", ",  Y, ")");
-		-+status("moving");
-		-+pos(X, Y);
-		setPosition(MId, X, Y);
-		-+status("idle").
+
 
 +!focus_message_task(AtName)  
 	: 	status("idle")
@@ -89,7 +72,8 @@ neighborhood(5).
 	  .my_name(R);
 	  .print("Robo ", R, " fez bid em ", AId, "name: ", AtName); 
 	  +myfocused(AId);
-	  bid(Rx, Ry)[artifact_id(AId)].
+	  bid(Rx, Ry)[artifact_id(AId)];
+	  -+visited([]).
 	
 /*
  * Caso contrário, "ignora" a tarefa
@@ -188,6 +172,7 @@ neighborhood(5).
 		}
 		else {
 			!arrivedAtDestination(Rx, Ry);
+			.abolish(destiny(_, _));
 		}.
 
 +!moveToDestiny(X, Y)
@@ -198,7 +183,7 @@ neighborhood(5).
 		-+status("to_destiny").
 		
 		
-+!arrivedAtDestination(X, Y)
+@arrive[atomic]+!arrivedAtDestination(X, Y)
 	:	task(TName, _, _) &
 		myfocused(AId) &
 		myId(MId)
@@ -207,20 +192,7 @@ neighborhood(5).
 		.send(TName, tell, arrive(X, Y));
 		stopFocus(AId);
 		-myfocused(AId);
-		!energy_level;
 		-+status("idle").
-		
-+!energy_level 
-	:	R = math.random &
-		R < 0.1 
-	<-	.df_search(create, L);
-		.my_name(N);
-		.send(L, tell, robot_finish(N));
-		.print("Low Energy... Shutting down");
-		.kill_agent(N).	
-
-+!energy_level
-	<-	.wait(0).
 	
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

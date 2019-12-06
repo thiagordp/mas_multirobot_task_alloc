@@ -9,7 +9,7 @@ import jason.asSemantics.*;
 import jason.asSyntax.*;
 
 /**
- * @author trdp
+ * @authors Daniel, George, Marcelo e Thiago 
  *
  */
 @SuppressWarnings("serial")
@@ -22,8 +22,6 @@ public class create_task extends DefaultInternalAction {
 		
 		CreateControls createC = CreateControls.createControl();
 
-		// RuntimeServices provides services to create agents in the current platform
-		// (Centralized, JADE, JaCaMo, ...)
 		RuntimeServices rs = ts.getUserAgArch().getRuntimeServices();
 
 		int id;
@@ -33,8 +31,6 @@ public class create_task extends DefaultInternalAction {
 		
 		createC.addId(id);
 		
-		// use Settings to add initial beliefs and goals for the new agent
-		// (as used in the .mas2j project file)
 		Settings sett = new Settings();
 		sett.addOption(Settings.INIT_BELS, "myId(" + createC.newCount() + "), maxSize(" + MAX_SIZE  + ")");
 
