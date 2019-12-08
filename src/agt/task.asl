@@ -31,7 +31,7 @@
 		.print("Initial broadcasting para os robos...");
 		.df_search(robo, L);
 		.send(L, achieve, focus_message_task(Id));
-		.at("now + 5 seconds", {+!decide(Id)}).
+		.at("now + 100 milliseconds", {+!decide(Id)}).
 
 +!decide(Id)
 	: 	Id::bid_count(C) &
@@ -45,10 +45,10 @@
 		origin(X, Y) &
 		myId(Mi)
 	<- 	setPosition(Mi, X, Y);
-		.print("Broadcasting ", Id);
+		//.print("Broadcasting...");
 		.df_search(robo, L);
 		.send(L, achieve, focus_message_task(Id));
-		.at("now + 5 seconds", {+!decide(Id)}).
+		.at("now + 100 milliseconds", {+!decide(Id)}).
 
 +hello(AId)[source(A)]
 	:	AId::winner(N) &

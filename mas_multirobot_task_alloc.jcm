@@ -17,5 +17,7 @@ mas mas_multirobot_task_alloc {
     	beliefs: robots(5), tasks(10)
     }
     
+    agent stats : stats.asl
+    
     class-path: lib                      // java class path
 }

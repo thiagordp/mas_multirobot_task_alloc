@@ -1,7 +1,7 @@
 /**
  * 
  */
-package utils;
+package robot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,8 @@ import jason.asSyntax.NumberTerm;
 import jason.asSyntax.NumberTermImpl;
 import jason.asSyntax.Structure;
 import jason.asSyntax.Term;
+import utils.Location;
+import utils.MoveControls;
 
 /**
  * Search for next_unvisited node
@@ -71,9 +73,12 @@ public class next_unvisited extends DefaultInternalAction {
 
 		int d = 1;
 		while (true) {
+			int randX = 0, randY = 0;
 
-			int randX = (int) (currentPos.x + Math.round(Math.random() * (d + 1) - d));
-			int randY = (int) (currentPos.y + Math.round(Math.random() * (d + 1) - d));
+			if (Math.random() < 0.5)
+				randX = (currentPos.x + (int) (Math.round(Math.random() * (d + 1) - d)));
+			else
+				randY = (currentPos.y + (int) (Math.round(Math.random() * (d + 1) - d)));
 
 			int locX = randX + currentPos.x;
 			int locY = randY + currentPos.y;

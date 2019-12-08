@@ -4,13 +4,15 @@
 /* Includes */
 { include("explore/move_random.asl") }		// Random Movement Strategy
 { include("explore/move_unvisited.asl") }	// Move to Unvisited Strategy
+{ include("explore/move_r_learning.asl") }	// Move to Unvisited Strategy
 
 /* Initial beliefs and rules */
 neighborhood(5).
-search_strategy(random).
+//search_strategy(random).
 //search_strategy(unvisited).
-// search_strategy(r_learning).
-
+search_strategy(r_learning).
+dist(0).
+tasks_cnt(0).
 
 /* Initial goals */
 !set_initial_positions.
@@ -19,25 +21,32 @@ search_strategy(random).
 +!set_initial_positions
 	:	myId(MId) &
 		maxSize(M)
-	<- 	+pos(math.round(math.random * M), math.round(math.random * M));
+	<- 	.wait(math.round(math.random * 1000)+500);
+		+pos(math.round(math.random * M), math.round(math.random * M));
 		.my_name(Id);
 		.concat(Id, "view", V);
 		.print(V);
 		makeArtifact(V, "grid.AgentPlanet", [M], ArtId);
 		focus(ArtId);
 		addRobot(MId);
+		
 		!start.
 	
 +!start
 	: 	pos(X, Y) &
 		myId(MId)
-	 <- setPosition(MId, X, Y);
+	 <- -+lastPos(X, Y);
+	 	setPosition(MId, X, Y);
 	    .df_register(robo);
 	 	+status("idle"). 
 
++pos(X, Y) 
+	:	dist(Z)
+	<-	-+dist(Z+1).
+
 +status("idle")
 	<-	-+exploring(no); 	
-		.at("now + 1 seconds", {+!decideMove}).
+		.at("now + 200 milliseconds", {+!decideMove}).
 
 +!decideMove
 	: status(S) &
@@ -73,6 +82,7 @@ search_strategy(random).
 	  .print("Robo ", R, " fez bid em ", AId, "name: ", AtName); 
 	  +myfocused(AId);
 	  bid(Rx, Ry)[artifact_id(AId)];
+	  !bid_rl; // Usado apenas no rl
 	  -+visited([]).
 	
 /*
@@ -80,7 +90,7 @@ search_strategy(random).
  */
 +status_task(S)[artifact_id(AId), artifact_name(AId, AtName)]
 	<- 
-	  //.print("Stop focus ", AId, " task: ", AtName);
+	 //.print("Stop focus ", AId, " task: ", AtName);
 	  lookupArtifact(AtName, ToolId);
 	  stopFocus(ToolId).
 
@@ -94,6 +104,7 @@ search_strategy(random).
 	 <-	  
 	  if (Me == N){
 	  	.print(AtName, " sent accept, then I'm moving to ", AtName);
+	  	!winner_rl;
 	  	-+status("processing");
 	  }
 	  else {
@@ -106,7 +117,7 @@ search_strategy(random).
 	.wait(0).
 	
 +status("processing")
-	<- 	.at("now + 1 seconds", {+!moveToTask}).
+	<- 	.at("now + 300 milliseconds", {+!moveToTask}).
 	
 +!moveToTask
 	:	task(TName, X, Y) &
@@ -138,10 +149,13 @@ search_strategy(random).
 		.print("Update").
 
 +!move(X, Y)
-	: myId(MId)
+	: myId(MId) &
+	  pos(Rx, Ry)
 	<- 	-+status("moving");
+		-+last_pos(Rx, Ry);
 		-+pos(X, Y);
 		setPosition(MId, X, Y);
+		.print(Rx, ", ", Ry);
 		-+status("processing").
 
 +destiny(X, Y)[source(A)]
@@ -153,11 +167,12 @@ search_strategy(random).
 		-+status("to_destiny").
 		
 +status("to_destiny")
-	<- 	.at("now + 1 seconds", {+!defineMoveDestiny}).
+	<- 	.at("now + 200 milliseconds", {+!defineMoveDestiny}).
 	
 +!defineMoveDestiny
 	: 	pos(Rx, Ry) &
-		displacement(X, Y)
+		displacement(X, Y) &
+		tasks_cnt(C)
 	<-	if (Rx > X) {
 			!moveToDestiny(Rx - 1, Ry);
 		}
@@ -171,13 +186,16 @@ search_strategy(random).
 			!moveToDestiny(Rx, Ry + 1);
 		}
 		else {
+			-+tasks_cnt(C+1);
 			!arrivedAtDestination(Rx, Ry);
 			.abolish(destiny(_, _));
 		}.
 
 +!moveToDestiny(X, Y)
-	: myId(MId)
+	: myId(MId) &
+	  pos(Rx, Ry)
 	<- 	-+status("moving");
+		-+last_pos(Rx, Ry);
 		-+pos(X, Y);
 		setPosition(MId, X, Y);
 		-+status("to_destiny").
@@ -194,6 +212,22 @@ search_strategy(random).
 		-myfocused(AId);
 		-+status("idle").
 	
+/*
+ * Code below is intended to generate data for analysis only.
+ */
+ 
+@stats[atomic]+generate_stats
+	:	dist(D) &
+		tasks_cnt(C) 
+	<-  .print("==============================================");
+		.print("Tasks:    ", C);
+		.print("Distance: ", D);
+		!l.
+	    	    
+@s1[atomic]+!l
+	<- .wait(100);
+		!l.
+ 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 

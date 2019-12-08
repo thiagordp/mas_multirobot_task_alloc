@@ -4,7 +4,7 @@
 
 count_robots(0).
 count_tasks(0).
-random_wait(R) :- R = math.round(math.random * 2000) + 500.
+random_wait(R) :- R = math.round(math.random * 200) + 50.
 
 /* Initial goals */
 !start.

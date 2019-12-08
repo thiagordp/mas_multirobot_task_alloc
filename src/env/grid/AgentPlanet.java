@@ -6,7 +6,7 @@ import cartago.OPERATION;
 
 public class AgentPlanet extends Artifact {
 	
-	public static final int NB_AG = 50;
+	public static final int NB_AG = 200000;
 	
 	private static Logger logger = Logger.getLogger(AgentPlanet.class.getName());
 
@@ -24,7 +24,7 @@ public class AgentPlanet extends Artifact {
 	}
 	
 	@OPERATION
-	public void removeAgent(int agId, int x, int y) {
+	public void removeAgent(int agId, int x, int y) { // TODO: Remover agente após conclusão
 		model.remove(agId, x, y);
 	}
 	

@@ -17,7 +17,7 @@ exploring(no).
 	  	search_strategy(unvisited) &
 	  	visited(L) &
 	  	exploring(no) &
-	  	utils.next_unvisited(X, Y, L, M, Next_X, Next_Y)	  	
+	  	robot.next_unvisited(X, Y, L, M, Next_X, Next_Y)	  	
 	<-  -+exploring(yes);
 		.print("Next    -> ", Next_X, ", ", Next_Y);
 		.print("Visited -> ", L);
@@ -92,7 +92,8 @@ exploring(no).
  */
 +!move(X, Y)
 	: 	myId(MId) &
-		status("idle")
+		status("idle") &
+		search_strategy(unvisited)
 	<- 	-+pos(X, Y);
 		setPosition(MId, X, Y);		
 		!add_visited(pos(X,Y)); 

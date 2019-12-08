@@ -1,9 +1,10 @@
 package utils;
 
 public class Location implements Comparable<Location> {
-	int x;
-	int y;
-	int distance;
+
+	public int x;
+	public int y;
+	public int distance;
 
 	public Location() {
 		x = 0;
