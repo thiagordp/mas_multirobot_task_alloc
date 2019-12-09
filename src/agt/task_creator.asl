@@ -39,7 +39,7 @@ random_wait(R) :- R = math.round(math.random * 200) + 50.
 		tasks(T) & 
 		C < T 
 	 <- .print("Creating tasks. ", (R/1000));
-	 	.wait(R);
+	 	.wait(R/2);
 		task.create_task;
 		-+count_tasks(C+1);
 		!create_robots.
@@ -49,7 +49,7 @@ random_wait(R) :- R = math.round(math.random * 200) + 50.
  */
 +!create_tasks 
 	:	random_wait(R)  
-	<- 	.wait(R);
+	<- 	.wait(R/2);
 		!create_robots.
 
 /*
@@ -73,7 +73,7 @@ random_wait(R) :- R = math.round(math.random * 200) + 50.
  */
 +!create_robots
 	:	random_wait(R)  
-	<- 	.wait(R);
+	<- 	.wait(R/10);
 		!create_tasks.
 
 { include("$jacamoJar/templates/common-cartago.asl") }

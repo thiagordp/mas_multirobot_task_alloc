@@ -7,23 +7,9 @@
 +!defineMove
 	: pos(X, Y) &
 	  maxSize(M) &
-	  search_strategy(random)
-	<- 	D = math.round(math.random*3);
-		if(D == 0 & X + 1 <= M  ){
-			!moveNeighbor(X + 1, Y);	
-		}
-		elif( D == 1 & X - 1 >= 0 ){
-			!moveNeighbor(X - 1, Y);
-		}
-		elif( D == 2 & Y - 1 >= 0 ){
-			!moveNeighbor(X, Y - 1);
-		}
-		elif( D == 3 & Y + 1 <= M ){
-			!moveNeighbor(X, Y + 1);
-		}
-		else{
-			!defineMove;
-		}.
+	  search_strategy(random) &
+	  robot.next_random(X, Y, Next_X, Next_Y, M)
+	<- 	!moveNeighbor(Next_X, Next_Y).
 		
 +!moveNeighbor(X, Y)
 	: 	myId(MId)
@@ -32,3 +18,4 @@
 		-+pos(X, Y);
 		setPosition(MId, X, Y);
 		-+status("idle").
+				

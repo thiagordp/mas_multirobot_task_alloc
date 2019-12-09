@@ -4,7 +4,6 @@
 package robot;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -74,23 +73,6 @@ public class next_unvisited extends DefaultInternalAction {
 	private Location getNearestUnvisited(List<Location> visited, Location currentPos, int gridSize) {
 
 		int d = 1;
-		/*
-		 * while (true) { int randX = 0, randY = 0;
-		 * 
-		 * if (Math.random() < 0.5) randX = (currentPos.x + (int)
-		 * (Math.round(Math.random() * (d + 1) - d))); else randY = (currentPos.y +
-		 * (int) (Math.round(Math.random() * (d + 1) - d)));
-		 * 
-		 * int locX = randX + currentPos.x; int locY = randY + currentPos.y;
-		 * 
-		 * if (locX >= 0 && locX <= gridSize && locY >= 0 && locY <= gridSize) {
-		 * Location l = new Location(locX, locY);
-		 * 
-		 * if (!MoveControls.contains(visited, l)) return l; else if (Math.random() <
-		 * 0.5) d++;
-		 * 
-		 * } else { d++; } }
-		 */
 
 		Random r = new Random();
 		r.setSeed(System.nanoTime());
@@ -121,9 +103,5 @@ public class next_unvisited extends DefaultInternalAction {
 
 			d++;
 		}
-	}
-
-	private boolean insideGrid(Location l, int gridSize) {
-		return (l.x >= 0 || l.x <= gridSize || l.y >= 0 || l.y <= gridSize);
 	}
 }

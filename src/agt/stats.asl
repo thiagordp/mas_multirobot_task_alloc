@@ -10,7 +10,7 @@
 
 +!start
 	<- 	.print("Setting up statistics...");
-		.at("now +5 m", {+!stats_broadcast}).
+		.at("now +10 m", {+!stats_broadcast}).
 	
 +!stats_broadcast
 	<-	.df_search(robo, L);

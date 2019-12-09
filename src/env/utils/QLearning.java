@@ -9,8 +9,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import javax.swing.JOptionPane;
-
 /**
  * Q-Learning implementation
  * 

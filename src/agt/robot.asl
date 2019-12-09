@@ -49,7 +49,7 @@ tasks_cnt(0).
 
 +status("idle")
 	<-	-+exploring(no); 	
-		.at("now + 200 milliseconds", {+!decideMove}).
+		.at("now + 100 milliseconds", {+!decideMove}).
 
 +!decideMove
 	: status(S) &

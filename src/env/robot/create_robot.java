@@ -11,7 +11,6 @@ import java.util.Random;
 import jason.asSemantics.*;
 import jason.asSyntax.*;
 
-@SuppressWarnings("serial")
 public class create_robot extends DefaultInternalAction {
 
 	public static final int MAX_SIZE = 20;
@@ -39,22 +38,24 @@ public class create_robot extends DefaultInternalAction {
 
 		Random random = new Random();
 		random.setSeed(System.nanoTime());
-		double r = random.nextDouble();
+		
 		
 		/* Experiments with mixed agents */
 		/*
+		double r = random.nextDouble();
 		if (r < (1D / 3))
 			beliefs = beliefs.replace("#", "random");
 		else if (r >= (1D / 3) && r < (2D / 3)) {
 			beliefs = beliefs.replace("#", "unvisited");
 		} else {
 			beliefs = beliefs.replace("#", "r_learning");
-		}*/
+		}
+		*/
 		
 		/* Experiments with random agents */
-		//beliefs = beliefs.replace("#", "random");
+		beliefs = beliefs.replace("#", "random");
 		/* Experiments with unvisited pos agents */
-		beliefs = beliefs.replace("#", "unvisited");
+		//beliefs = beliefs.replace("#", "unvisited");
 		/* Experiments with unvisited pos agents */
 		//beliefs = beliefs.replace("#", "r_learning");
 		
