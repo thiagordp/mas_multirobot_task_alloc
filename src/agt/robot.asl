@@ -7,10 +7,11 @@
 { include("explore/move_r_learning.asl") }	// Move to Unvisited Strategy
 
 /* Initial beliefs and rules */
-neighborhood(5).
+neighborhood(2).
 //search_strategy(random).
 //search_strategy(unvisited).
-search_strategy(r_learning).
+//search_strategy(r_learning).
+
 dist(0).
 tasks_cnt(0).
 
@@ -34,10 +35,12 @@ tasks_cnt(0).
 	
 +!start
 	: 	pos(X, Y) &
-		myId(MId)
+		myId(MId) &
+		search_strategy(S) 
 	 <- -+lastPos(X, Y);
 	 	setPosition(MId, X, Y);
 	    .df_register(robo);
+	    .print("Strategy: ", S);
 	 	+status("idle"). 
 
 +pos(X, Y) 
@@ -216,7 +219,7 @@ tasks_cnt(0).
  * Code below is intended to generate data for analysis only.
  */
  
-@stats[atomic]+generate_stats
+@stats[atomic]+!generate_stats
 	:	dist(D) &
 		tasks_cnt(C) 
 	<-  .print("==============================================");

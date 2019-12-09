@@ -6,7 +6,7 @@ import java.util.List;
 public class CreateControls {
 	
 	private int count = -1;
-	private List<Integer> listIds = new LinkedList<Integer>();	
+	private List<Long> listIds = new LinkedList<Long>();	
 	
 	// singleton patter
 	protected static CreateControls createControls = null;
@@ -32,11 +32,11 @@ public class CreateControls {
 		return this.count;
 	}
 	
-	public void addId(Integer agId) {
+	public void addId(Long agId) {
 		this.listIds.add(agId);
 	}
 	
-	public boolean contains(Integer agId) {
+	public boolean contains(Long agId) {
 		return this.listIds.contains(agId);
 	}
 

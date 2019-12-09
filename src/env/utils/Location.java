@@ -48,4 +48,9 @@ public class Location implements Comparable<Location> {
 		return 1;
 	}
 
+	public static int getDistance(Location l1, Location l2) {
+
+		return Math.abs(l1.x - l2.x) + Math.abs(l1.y - l2.y);
+	}
+
 }

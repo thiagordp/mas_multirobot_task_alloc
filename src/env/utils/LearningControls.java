@@ -20,6 +20,7 @@ public class LearningControls {
 	private static String[] actions = { "N", "S", "L", "O" };
 	private static HashMap<String, QLearning<GridState>> agentQTables = new HashMap<String, QLearning<GridState>>();
 
+	// TODO: Initialize borders with -inf q value.
 	/*
 	 * 
 	 */
@@ -30,6 +31,25 @@ public class LearningControls {
 			q.setEpsilon(1D);
 			q.setEpsilonDecrement(0.0001);
 			q.setGamma(0.5);
+
+			GridState state;
+			for (int i = 0; i <= gridSize; i++) {
+				// Primeira coluna
+				state = new GridState(i, 0);
+				q.updateQ(state, "O", state, (double)Math.pow(Long.MIN_VALUE, 3D));
+				
+				// Primeira linha
+				state = new GridState(0, i);
+				q.updateQ(state, "N", state, (double)Math.pow(Long.MIN_VALUE, 3D));
+				
+				// Última coluna
+				state = new GridState(i, gridSize);
+				q.updateQ(state, "L", state, (double)Math.pow(Long.MIN_VALUE, 3D));
+				
+				// Última linha
+				state = new GridState(gridSize, i);
+				q.updateQ(state, "S", state, (double)Math.pow(Long.MIN_VALUE, 3D));
+			}
 
 			agentQTables.put(agName, q);
 		}

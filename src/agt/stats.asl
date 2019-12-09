@@ -10,11 +10,11 @@
 
 +!start
 	<- 	.print("Setting up statistics...");
-		.at("now +30 m", {+!stats_broadcast}).
+		.at("now +5 m", {+!stats_broadcast}).
 	
 +!stats_broadcast
 	<-	.df_search(robo, L);
-		.send(L, tell, generate_stats);
+		.send(L, achieve, generate_stats);
 		//.print("Stats broadcast");
 		.wait(10);
 		!stats_broadcast.

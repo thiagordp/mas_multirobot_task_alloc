@@ -20,8 +20,8 @@ exploring(no).
 	  	robot.next_unvisited(X, Y, L, M, Next_X, Next_Y)	  	
 	<-  -+exploring(yes);
 		.print("Next    -> ", Next_X, ", ", Next_Y);
-		.print("Visited -> ", L);
-		.wait(1000);
+		//.print("Visited -> ", L);
+		.wait(100);
 		!move_unvisited(Next_X, Next_Y).
 
 /*
@@ -30,7 +30,7 @@ exploring(no).
 +!defineMove
 	:	status("idle") &
 		search_strategy(unvisited)
-	<- 	.wait(1000);
+	<- 	.wait(100);
 		!defineMove.
 
 /*
@@ -40,7 +40,7 @@ exploring(no).
 	:	search_strategy(unvisited) & 
 		pos(X, Y) 
 	<- 	-+visited([]);
-		.wait(1000).
+		.wait(100).
 		
 /*
  * 
@@ -50,6 +50,7 @@ exploring(no).
 		status("idle") &
 		visited(L)
 	<-  
+		-+exploring(yes);
 		if (Rx > X) {
 			!move(Rx - 1, Ry);
 		}
@@ -62,8 +63,8 @@ exploring(no).
 		elif (Ry < Y) {
 			!move(Rx, Ry + 1);
 		} else {
-			!add_visited(pos(X,Y)); 	// mark current position as visited.
 			-+exploring(no);
+			!add_visited(pos(X,Y)); 	// mark current position as visited.
 			!defineMove; 				// Starts the search again
 		}.
 
