@@ -21,7 +21,8 @@ tasks_cnt(0).
 /* Plans */
 +!set_initial_positions
 	:	myId(MId) &
-		maxSize(M)
+		maxSize(M) &
+		search_strategy(S)
 	<- 	.wait(math.round(math.random * 1000)+500);
 		+pos(math.round(math.random * M), math.round(math.random * M));
 		.my_name(Id);
@@ -29,7 +30,7 @@ tasks_cnt(0).
 		.print(V);
 		makeArtifact(V, "grid.AgentPlanet", [M], ArtId);
 		focus(ArtId);
-		addRobot(MId);
+		addRobot(MId, S);
 		
 		!start.
 	

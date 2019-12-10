@@ -41,7 +41,7 @@ public class create_robot extends DefaultInternalAction {
 		
 		
 		/* Experiments with mixed agents */
-		/*
+		
 		double r = random.nextDouble();
 		if (r < (1D / 3))
 			beliefs = beliefs.replace("#", "random");
@@ -50,14 +50,14 @@ public class create_robot extends DefaultInternalAction {
 		} else {
 			beliefs = beliefs.replace("#", "r_learning");
 		}
-		*/
+		
 		
 		/* Experiments with random agents */
-		beliefs = beliefs.replace("#", "random");
+		// beliefs = beliefs.replace("#", "random");
 		/* Experiments with unvisited pos agents */
-		//beliefs = beliefs.replace("#", "unvisited");
+		// beliefs = beliefs.replace("#", "unvisited");
 		/* Experiments with unvisited pos agents */
-		//beliefs = beliefs.replace("#", "r_learning");
+		// beliefs = beliefs.replace("#", "r_learning");
 		
 		Settings sett = new Settings();
 		sett.addOption(Settings.INIT_BELS, beliefs);

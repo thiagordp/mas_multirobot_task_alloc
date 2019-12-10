@@ -1,6 +1,9 @@
 package grid;
 
 import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
 import cartago.Artifact;
 import cartago.OPERATION;
 
@@ -29,8 +32,8 @@ public class AgentPlanet extends Artifact {
 	}
 	
 	@OPERATION
-	public void addRobot(int agId) {
-		view.addRobot(agId);
+	public void addRobot(int agId, String strategyType) {
+		view.addRobot(agId, strategyType);
 	}
 	
 	@OPERATION
