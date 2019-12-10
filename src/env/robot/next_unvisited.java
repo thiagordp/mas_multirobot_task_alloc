@@ -101,6 +101,9 @@ public class next_unvisited extends DefaultInternalAction {
 				return listLoc.get(pos);
 			}
 
+			if (d == gridSize)
+				return currentPos;
+			
 			d++;
 		}
 	}

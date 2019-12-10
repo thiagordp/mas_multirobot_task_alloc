@@ -28,25 +28,36 @@ public class next_random extends DefaultInternalAction {
 			Random r = new Random();
 			r.setSeed(System.nanoTime());
 
-			int rx = (int) Math.round(agX.solve());
-			int ry = (int) Math.round(agY.solve());
-			int gridSize = (int) Math.round(gS.solve());
+			int x = (int) Math.floor(agX.solve());
+			int y = (int) Math.floor(agY.solve());
+			int gridSize = (int) Math.floor(gS.solve());
+			int c = 0;
+
+			int rx = x;
+			int ry = y;
 
 			do {
-				double x = r.nextInt(4);
 
-				if (x == 0) {
+				int o = r.nextInt(4);
+
+				if (o == 0) {
 					rx = rx + 1;
-				} else if (x == 1) {
+				} else if (o == 1) {
 					rx = rx - 1;
-				} else if (x == 2) {
+				} else if (o == 2) {
 					ry = ry + 1;
-				} else if (x == 3) {
+				} else if (o == 3) {
 					ry = ry - 1;
 				}
 
+				if (c == 10) {
+					rx = x;
+					ry = y;
+				}
+				c++;
 			} while (rx < 0 || rx > gridSize || ry < 0 || ry > gridSize);
 
+			
 			un.unifies(terms[2], new NumberTermImpl(rx));
 			un.unifies(terms[3], new NumberTermImpl(ry));
 

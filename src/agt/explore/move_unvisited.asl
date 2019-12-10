@@ -19,7 +19,7 @@ exploring(no).
 	  	exploring(no) &
 	  	robot.next_unvisited(X, Y, L, M, Next_X, Next_Y)	  	
 	<-  -+exploring(yes);
-		.print("Next    -> ", Next_X, ", ", Next_Y);
+		//.print("Next    -> ", Next_X, ", ", Next_Y);
 		//.print("Visited -> ", L);
 		.wait(100);
 		!move_unvisited(Next_X, Next_Y).

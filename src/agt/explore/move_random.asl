@@ -13,7 +13,7 @@
 		
 +!moveNeighbor(X, Y)
 	: 	myId(MId)
-	<- 	.print("I am moving to (", X, ", ",  Y, ")");
+	<- 	//.print("I am moving to (", X, ", ",  Y, ")");
 		-+status("moving");
 		-+pos(X, Y);
 		setPosition(MId, X, Y);

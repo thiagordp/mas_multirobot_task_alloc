@@ -14,7 +14,7 @@
 
 mas mas_multirobot_task_alloc {
     agent creator : task_creator.asl{
-    	beliefs: robots(5), tasks(10)
+    	beliefs: robots(50), tasks(100)
     }
     
     agent stats : stats.asl
